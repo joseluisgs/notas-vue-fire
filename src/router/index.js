@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
+import Error404 from '../views/Error404.vue';
 
 Vue.use(VueRouter);
 
@@ -20,8 +21,15 @@ const routes = [
   },
   {
     path: '/notas',
-    name: 'notas',
+    name: 'Notas',
     component: () => import(/* webpackChunkName: "about" */ '../views/Notas.vue'),
+  },
+  // Otro destino que no esté ene path
+  // Error 404
+  {
+    path: '*',
+    name: 'Error404',
+    component: Error404,
   },
 ];
 

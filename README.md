@@ -1,6 +1,6 @@
 # Notas-Vue-NEM
 
-Una aplicación de notas usando Vue.JS. Como siempre para uso docente y educativo.
+Una aplicación de notas usando Vue.js. Como siempre para uso docente y educativo.
 
 [![Licence](https://img.shields.io/github/license/joseluisgs/NodeMonRest)](https://github.com/joseluisgs/NodeMonRest/blob/master/LICENSE)
 [![Vue Ready](https://img.shields.io/badge/Vue.js-%20Ready-%2342b983)](https://es.vuejs.org/)
