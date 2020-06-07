@@ -9,10 +9,10 @@ Una aplicación de notas usando Vue.js. Como siempre para uso docente y educativ
 [![JS Code](https://img.shields.io/badge/JS%20Code-ES2019-yellow)](https://www.ecma-international.org/ecma-262)
 [![JS Style](https://img.shields.io/badge/JS%20Style-AirBnB-ff69b4)](https://airbnb.io/javascript)
 
-### Acerca de
+## Acerca de
 Este proyecto tiene como objetivo hacer la parte de frontend usando la tecnología [Vue.JS](https://es.vuejs.org/index.html) y distintas tecnologías asociadas. Solo para fines educativos. El backend a consumir es [notas-back-nem](https://github.com/joseluisgs/notas-back-nem)
 
-## Project setup
+### Project setup
 ```
 npm install
 ```

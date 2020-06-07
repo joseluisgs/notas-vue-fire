@@ -30,7 +30,7 @@ COPY . .
 RUN npm run build
 
 # Exponemos el puerto del servidor
-EXPOSE 8000
+EXPOSE 8080
 
 # Ejecutamos el comando en dist, pero en el resto del contenedor tenemos el resto de código (ver COPY)
 CMD [ "node", "server.js" ]
