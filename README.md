@@ -5,10 +5,10 @@ Una aplicación de notas usando Vue.js. Como siempre para uso docente y educativ
 ![NotasVueNEM CI/CD](https://github.com/joseluisgs/notas-vue-nem/workflows/NotasVueNEM%20CI/CD/badge.svg)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue)](https://hub.docker.com/r/joseluisgs/notas-vue-nem)
 [![Heroku](https://img.shields.io/badge/Heroku-Ready-blueviolet)](https://notas-vue-nem.herokuapp.com/)
-[![Licence](https://img.shields.io/github/license/joseluisgs/NodeMonRest)](https://github.com/joseluisgs/NodeMonRest/blob/master/LICENSE)
 [![Vue Ready](https://img.shields.io/badge/Vue.js-%20Ready-%2342b983)](https://es.vuejs.org/)
 [![JS Code](https://img.shields.io/badge/JS%20Code-ES2019-yellow)](https://www.ecma-international.org/ecma-262)
 [![JS Style](https://img.shields.io/badge/JS%20Style-AirBnB-ff69b4)](https://airbnb.io/javascript)
+[![Licence](https://img.shields.io/github/license/joseluisgs/NodeMonRest)](https://github.com/joseluisgs/NodeMonRest/blob/master/LICENSE)
 
 ## Acerca de
 Este proyecto tiene como objetivo hacer la parte de frontend usando la tecnología [Vue.js](https://es.vuejs.org/index.html) y distintas tecnologías asociadas. Solo para fines educativos. El backend a consumir es [notas-back-nem](https://github.com/joseluisgs/notas-back-nem)
