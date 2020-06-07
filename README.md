@@ -1,6 +1,7 @@
 # Notas-Vue-NEM
 
 Una aplicación de notas usando Vue.js. Como siempre para uso docente y educativo.
+
 ![NotasVueNEM CI/CD](https://github.com/joseluisgs/notas-vue-nem/workflows/NotasVueNEM%20CI/CD/badge.svg)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue)](https://hub.docker.com/r/joseluisgs/notas-vue-nem)
 [![Heroku](https://img.shields.io/badge/Heroku-Ready-blueviolet)](https://notas-vue-nem.herokuapp.com/)
