@@ -221,7 +221,7 @@ export default {
     },
     // Carga la lista de notas
     cargarNotas() {
-      this.alerta.texto = 'Cargando notas...';
+      this.alerta.texto = 'Cargando notas. Por favor, espere...';
       this.alerta.color = 'info';
       this.showAlert();
       // Consultamos todas las notas
