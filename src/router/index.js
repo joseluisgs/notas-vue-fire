@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from '../views/Home.vue';
-import Error404 from '../views/Error404.vue';
+import Home from '@/views/Home.vue';
+import Error404 from '@/views/Error404.vue';
 
 Vue.use(VueRouter);
 
@@ -17,12 +17,12 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
+    component: () => import(/* webpackChunkName: "about" */ '@/views/About.vue'),
   },
   {
     path: '/notas',
     name: 'Notas',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Notas.vue'),
+    component: () => import(/* webpackChunkName: "about" */ '@/views/Notas.vue'),
   },
   // Otro destino que no esté ene path
   // Error 404

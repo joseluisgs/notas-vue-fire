@@ -66,7 +66,7 @@
         <b-button class="btn-warning btn-sm mx-2 my-1" @click="activarEdicion(row.item._id)">
           <b-icon icon="pencil-square" aria-hidden="true"></b-icon> Actualizar
         </b-button>
-        <b-button class="btn-danger btn-sm mx-2 my-1" @click="eliminarNota(row.item._id)">
+        <b-button class="btn-danger btn-sm mx-2 my-1" @click="mostrarMensaje(row.item)">
           <b-icon icon="trash"></b-icon> Eliminar
         </b-button>
       </template>
@@ -75,9 +75,7 @@
 </template>
 
 <script>
-/* eslint-disable no-restricted-globals */
-
-import NotasService from '../services/NotasService';
+import NotasService from '@/services/NotasService';
 
 export default {
   // Como me llamo
@@ -141,29 +139,26 @@ export default {
     },
     // elimina una nota
     eliminarNota(id) {
-      // eslint-disable-next-line no-alert
-      if (confirm('¿Está seguro?')) {
-        NotasService.delete(id)
+      NotasService.delete(id)
         // Si va bien
-          .then((res) => {
+        .then((res) => {
           // Elimino del array
           // eslint-disable-next-line no-underscore-dangle
-            const index = this.notas.findIndex((item) => item._id === res.data._id);
-            this.notas.splice(index, 1);
-            // Alerta de mensaje
-            this.alerta.texto = '¡Nota eliminada!';
-            this.alerta.color = 'danger';
-            this.showAlert();
-          })
+          const index = this.notas.findIndex((item) => item._id === res.data._id);
+          this.notas.splice(index, 1);
+          // Alerta de mensaje
+          this.alerta.texto = '¡Nota eliminada!';
+          this.alerta.color = 'danger';
+          this.showAlert();
+        })
         // Si falla
-          .catch((e) => {
-            console.log(e.response);
-            // Alerta de mensaje
-            this.alerta.texto = 'No se ha podido eliminar la nota';
-            this.alerta.color = 'danger';
-            this.showAlert();
-          });
-      }
+        .catch((e) => {
+          console.log(e.response);
+          // Alerta de mensaje
+          this.alerta.texto = 'No se ha podido eliminar la nota';
+          this.alerta.color = 'danger';
+          this.showAlert();
+        });
     },
     // agrega una nueva nota
     agregarNota() {
@@ -255,6 +250,27 @@ export default {
     },
     formAceptarEditar() {
       this.editarNota();
+    },
+    // mensaje Modal
+    mostrarMensaje(item) {
+      this.$bvModal.msgBoxConfirm(`¿Realmente desea eliminar esta nota? ${item.titulo}.`,
+        {
+          title: 'Eliminar nota',
+          size: 'sm',
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          okTitle: 'SÍ',
+          cancelTitle: 'NO',
+          footerClass: 'p-2',
+          hideHeaderClose: false,
+          centered: true,
+        })
+        .then((value) => {
+          if (value) {
+            // eslint-disable-next-line no-underscore-dangle
+            this.eliminarNota(item._id);
+          }
+        });
     },
   },
 };
