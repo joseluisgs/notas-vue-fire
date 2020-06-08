@@ -63,11 +63,14 @@
       <template v-slot:cell(descripcion)="row">{{row.item.descripcion}}</template>
       <template v-slot:cell(fecha)="row">{{row.item.fecha | moment("dddd, D MMMM YYYY, HH:mm:ss")}}</template>
       <template v-slot:cell(acciones)="row">
-        <b-button class="btn-warning btn-sm mx-2 my-1" @click="activarEdicion(row.item._id)">
-          <b-icon icon="pencil-square" aria-hidden="true"></b-icon> Actualizar
+        <b-button variant="primary" class="btn-sm mx-2 my-1" @click="verNota(row.item._id)" v-b-tooltip.hover title="Ver nota">
+          <b-icon icon="card-text" aria-hidden="true"></b-icon>
         </b-button>
-        <b-button class="btn-danger btn-sm mx-2 my-1" @click="mostrarMensaje(row.item)">
-          <b-icon icon="trash"></b-icon> Eliminar
+        <b-button variant="warning" class="btn-sm mx-2 my-1" @click="activarEdicion(row.item._id)" v-b-tooltip.hover title="Editar nota">
+          <b-icon icon="pencil-square" aria-hidden="true"></b-icon>
+        </b-button>
+        <b-button variant="danger" class="btn-sm mx-2 my-1" @click="mostrarMensaje(row.item)" v-b-tooltip.hover title="Eliminar nota">
+          <b-icon icon="trash"></b-icon>
         </b-button>
       </template>
     </b-table>
@@ -216,9 +219,9 @@ export default {
     },
     // Carga la lista de notas
     cargarNotas() {
-      this.alerta.texto = 'Cargando notas. Por favor, espere...';
+      /* this.alerta.texto = 'Cargando notas. Por favor, espere...';
       this.alerta.color = 'info';
-      this.showAlert();
+      this.showAlert(); */
       // Consultamos todas las notas
       NotasService.get()
         .then((notas) => {
@@ -231,6 +234,12 @@ export default {
           this.alerta.color = 'danger';
           this.showAlert();
         });
+    },
+    // Muestra una nota
+    verNota(id) {
+      // console.log(id);
+      // Una forma router.push({ path: `/notas/${id}` }) // -> /notas/123
+      this.$router.push({ name: 'Nota', params: { id: `${id}` } });
     },
     // Metodos de la alerta
     countDownChanged(dismissCountDown) {

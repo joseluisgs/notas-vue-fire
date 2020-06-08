@@ -2,6 +2,8 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '@/views/Home.vue';
 import Error404 from '@/views/Error404.vue';
+import Notas from '@/views/Notas.vue';
+import Nota from '@/views/Nota.vue';
 
 Vue.use(VueRouter);
 
@@ -22,7 +24,17 @@ const routes = [
   {
     path: '/notas',
     name: 'Notas',
-    component: () => import(/* webpackChunkName: "about" */ '@/views/Notas.vue'),
+    // Carga perezosa component: () => import(/* webpackChunkName: "about" */ '@/views/Notas.vue'),
+    component: Notas,
+  },
+  {
+    path: '/notas/:id', // La ruta y el parámetro
+    name: 'Nota', // el alias de la ruta
+    component: Nota, // Componente a carga
+    /* // Requerimos que estamos autenticados.
+    meta: { // Añadimos metadatos a la ruta
+      auth: true, // Exigimos que esté autenticado
+    }, */
   },
   // Otro destino que no esté ene path
   // Error 404

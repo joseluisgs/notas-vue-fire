@@ -11,8 +11,8 @@
         <b-collapse id="nav-collapse" is-nav>
           <b-navbar-nav>
             <b-nav-item to="/">Inicio</b-nav-item>
-            <b-nav-item to="Notas">Notas</b-nav-item>
-            <b-nav-item to="About">About</b-nav-item>
+            <b-nav-item to="/notas">Notas</b-nav-item>
+            <b-nav-item to="/about">About</b-nav-item>
           </b-navbar-nav>
 
           <!-- Right aligned nav items -->
