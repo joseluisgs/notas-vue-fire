@@ -44,6 +44,9 @@ export default {
       .then((item) => {
         this.nota = item.data;
         console.log(this.nota);
+      })
+      .catch(() => {
+        this.$router.push({ name: 'Error404' });
       });
   },
 };

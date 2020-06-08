@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" wit>
     <h1>Notas</h1>
     <hr>
     <!-- Ponemos la alerta: https://bootstrap-vue.org/docs/components/alert#alerts -->
@@ -58,18 +58,19 @@
     <!-- Pintamos la tabla del componente boosrapt b-table: https://bootstrap-vue.org/docs/components/table -->
     <b-table striped responsive hover :items="filtroNotas" :fields="tablaEncabezados">
       <!-- Por cad acelda indicamos como queremos que se renderice y qué campos -->
-      <template v-slot:cell(#)="row">{{row.item._id}}</template>
+      <!-- <template v-slot:cell(#)="row">{{row.item._id}}</template> -->
       <template v-slot:cell(titulo)="row">{{row.item.titulo}}</template>
       <template v-slot:cell(descripcion)="row">{{row.item.descripcion}}</template>
-      <template v-slot:cell(fecha)="row">{{row.item.fecha | moment("dddd, D MMMM YYYY, HH:mm:ss")}}</template>
+       <template v-slot:cell(imagen)><b-avatar src="https://placekitten.com/300/300"></b-avatar></template>
+      <template v-slot:cell(fecha)="row">{{row.item.fecha | moment("D/MM/YYYY, HH:mm")}}</template>
       <template v-slot:cell(acciones)="row">
-        <b-button variant="primary" class="btn-sm mx-2 my-1" @click="verNota(row.item._id)" v-b-tooltip.hover title="Ver nota">
+        <b-button variant="primary" class="btn-sm mx-1 my-1" @click="verNota(row.item._id)" v-b-tooltip.hover title="Ver nota">
           <b-icon icon="card-text" aria-hidden="true"></b-icon>
         </b-button>
-        <b-button variant="warning" class="btn-sm mx-2 my-1" @click="activarEdicion(row.item._id)" v-b-tooltip.hover title="Editar nota">
+        <b-button variant="warning" class="btn-sm mx-1 my-1" @click="activarEdicion(row.item._id)" v-b-tooltip.hover title="Editar nota">
           <b-icon icon="pencil-square" aria-hidden="true"></b-icon>
         </b-button>
-        <b-button variant="danger" class="btn-sm mx-2 my-1" @click="mostrarMensaje(row.item)" v-b-tooltip.hover title="Eliminar nota">
+        <b-button variant="danger" class="btn-sm mx-1 my-1" @click="mostrarMensaje(row.item)" v-b-tooltip.hover title="Eliminar nota">
           <b-icon icon="trash"></b-icon>
         </b-button>
       </template>
@@ -90,9 +91,10 @@ export default {
       nota: {}, // Para agregar una nota
       notas: [], // Lista de notas
       tablaEncabezados: [
-        { key: '#', sortable: true, label: '#' },
+        // { key: '#', sortable: true, label: '#' },
         { key: 'titulo', sortable: true, label: 'Título' },
         { key: 'descripcion', sortable: true, label: 'Descripción' },
+        { key: 'imagen', label: 'Imagen' },
         { key: 'fecha', sortable: true, label: 'Fecha' },
         { key: 'acciones', label: 'Acciones' },
       ],
@@ -285,5 +287,6 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+
 </style>
