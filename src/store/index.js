@@ -23,7 +23,6 @@ export default new Vuex.Store({
         // console.log(`Contenido sesion token: ${JSON.stringify(info)}`);
         state.user = info.user;
         // console.log(`Usuario sesion: ${JSON.stringify(state.user)}`);
-        router.push({ name: 'Home' });
       }
     },
   },
@@ -37,6 +36,7 @@ export default new Vuex.Store({
       localStorage.setItem('token-notas', token);
       // Confirmamos el estado
       commit('setUsuario', token);
+      router.push({ name: 'Home' });
     },
     // Cierra la sesion
     cerrarSesion({ commit }) {
@@ -45,7 +45,7 @@ export default new Vuex.Store({
       // Borramos el token
       localStorage.removeItem('token-notas');
       // Volvemos a home
-      router.push({ name: 'Home' });
+      router.push({ name: 'Login' });
     },
     // Lee el token desde el almacenamiento
     leerToken({ commit }) {
@@ -59,9 +59,8 @@ export default new Vuex.Store({
   },
   // campos computados o getter
   getters: {
-    estaActivo: (state) => !!state.token,
-    role: (state) => state.user.role,
-    user: (state) => state.user,
+    isActivo: (state) => state.token !== '',
+    isAdmin: (state) => state.user.role === 'ADMIN',
   },
   modules: {
   },
