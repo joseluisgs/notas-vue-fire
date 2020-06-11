@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1>Login</h1>
+    <h1>Registro</h1>
     <hr>
     <b-alert
       :show="dismissCountDown"
@@ -10,12 +10,19 @@
       @dismiss-count-down="countDownChanged"
     >{{alerta.texto}}
     </b-alert>
-    <form @submit.stop.prevent="login">
+    <form @submit.stop.prevent="registrar">
+      <input
+        type="text"
+        class="form-control my-2"
+        required
+        placeholder="username"
+        v-model="user.username"
+      />
       <input
         type="email"
         class="form-control my-2"
+        placeholder="email"
         required
-        placeholder="email@correo.com"
         v-model="user.email"
       />
       <input
@@ -24,7 +31,8 @@
         required
         v-model="user.password"
       />
-      <b-button variant="primary" type="submit">Acceder</b-button>
+      <b-button variant="primary mx-2" type="submit">Registrar</b-button>
+      <b-button variant="danger mx-2" type="reset">Cancelar</b-button>
     </form>
   </div>
 </template>
@@ -40,13 +48,19 @@ export default {
       alerta: { color: 'success', texto: '' },
       dismissSecs: 3,
       dismissCountDown: 0,
+      mensaje: '',
     };
   },
   methods: {
-    login() {
-      AuthService.login(this.user)
-        .then(() => this.$router.push({ name: 'Home' }))
-        .catch((error) => this.verAlerta(error.response.data.mensaje, 'danger'));
+    registrar() {
+      AuthService.register(this.user)
+        .then(() => {
+          this.verAlerta('Usuario registrado', 'success');
+          this.$router.push({ name: 'Login' });
+        })
+        .catch((error) => {
+          this.verAlerta(error.response.data.mensaje, 'danger');
+        });
     },
     // Metodos de la alerta
     verAlerta(texto, color) {

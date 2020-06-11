@@ -9,4 +9,8 @@ export default {
   login(data) {
     return Service.post(`${resource}/login`, data);
   },
+  // Realiza el Registro
+  register(data) {
+    return Service.post(`${resource}/register`, data);
+  },
 };
