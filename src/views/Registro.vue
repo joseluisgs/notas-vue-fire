@@ -41,6 +41,7 @@
 import AuthService from '@/services/AuthService';
 
 export default {
+  named: 'Registro',
   data() {
     return {
       user: {},

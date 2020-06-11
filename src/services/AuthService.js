@@ -13,4 +13,12 @@ export default {
   register(data) {
     return Service.post(`${resource}/register`, data);
   },
+  logout(token) {
+    const config = {
+      headers: {
+        token,
+      },
+    };
+    return Service.post(`${resource}/logout`, config);
+  },
 };

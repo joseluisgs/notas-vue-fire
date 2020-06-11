@@ -33,6 +33,7 @@
 import AuthService from '@/services/AuthService';
 
 export default {
+  named: 'Login',
   data() {
     return {
       user: {},

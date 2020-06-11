@@ -23,7 +23,7 @@
                 <b-icon icon="person"></b-icon>Usuario
               </template>
               <b-dropdown-item to="/login"><b-icon icon="box-arrow-in-right"></b-icon> Entrar</b-dropdown-item>
-              <b-dropdown-item to="/login"><b-icon icon="box-arrow-in-left"></b-icon> Salir</b-dropdown-item>
+              <b-dropdown-item @click="salir"><b-icon icon="box-arrow-in-left"></b-icon> Salir</b-dropdown-item>
               <b-dropdown-item to="/registrar"><b-icon icon="person-check"></b-icon> Registrar</b-dropdown-item>
               <b-dropdown-item href="https://twitter.com/joseluisgonsan" target="_blank"><b-icon icon="info" mx-2></b-icon>Contacto</b-dropdown-item>
             </b-nav-item-dropdown>
@@ -33,3 +33,17 @@
       <br />
     </section>
 </template>
+
+<script>
+import AuthService from '@/services/AuthService';
+
+export default {
+  methods: {
+    salir() {
+      AuthService.logout('Prueba')
+        .then(() => this.$router.push({ name: 'Home' }))
+        .catch((error) => console.log(error.response.data.mensaje));
+    },
+  },
+};
+</script>
