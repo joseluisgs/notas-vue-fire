@@ -36,14 +36,25 @@
 
 <script>
 import AuthService from '@/services/AuthService';
+import { mapState, mapActions } from 'vuex';
 
 export default {
+  // Al crearme cargamos el token
+  created() {
+    this.leerToken();
+    console.log(this.token);
+  },
   methods: {
+    ...mapActions(['cerrarSesion', 'leerToken']),
     salir() {
-      AuthService.logout('Prueba')
-        .then(() => this.$router.push({ name: 'Home' }))
+      // Por si hay que hacer algo en el servidor.
+      AuthService.logout(this.token)
+        .then(() => {
+          this.cerrarSesion();
+        })
         .catch((error) => console.log(error.response.data.mensaje));
     },
   },
+  computed: mapState(['token']),
 };
 </script>

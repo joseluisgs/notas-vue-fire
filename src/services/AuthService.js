@@ -13,12 +13,12 @@ export default {
   register(data) {
     return Service.post(`${resource}/register`, data);
   },
+  // Realiza el logout
   logout(token) {
+    const data = '';
     const config = {
-      headers: {
-        token,
-      },
+      headers: { Authorization: `Bearer ${token}` },
     };
-    return Service.post(`${resource}/logout`, config);
+    return Service.post(`${resource}/logout`, data, config);
   },
 };

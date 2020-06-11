@@ -44,7 +44,8 @@ export default new Vuex.Store({
       commit('setUsuario', '');
       // Borramos el token
       localStorage.removeItem('token-notas');
-      // router.push({ name: 'login' });
+      // Volvemos a home
+      router.push({ name: 'Home' });
     },
     // Lee el token desde el almacenamiento
     leerToken({ commit }) {
