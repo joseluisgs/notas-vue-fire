@@ -31,6 +31,8 @@
 
 <script>
 import AuthService from '@/services/AuthService';
+// Elementos de Vuex a usar
+import { mapActions } from 'vuex';
 
 export default {
   named: 'Login',
@@ -44,10 +46,19 @@ export default {
     };
   },
   methods: {
+    // Incopramos los elementos de Vuex
+    ...mapActions(['guardarSesion']),
     login() {
       AuthService.login(this.user)
-        .then(() => this.$router.push({ name: 'Home' }))
-        .catch((error) => this.verAlerta(error.response.data.mensaje, 'danger'));
+        .then((res) => {
+          // console.log(res.data.token);
+          this.guardarSesion(res.data.token);
+        })
+        .catch((error) => {
+          if (error.response.data.mensaje) {
+            this.verAlerta(error.response.data.mensaje, 'danger');
+          }
+        });
     },
     // Metodos de la alerta
     verAlerta(texto, color) {
