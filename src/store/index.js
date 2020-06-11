@@ -13,12 +13,12 @@ export default new Vuex.Store({
   },
   // Modifica el estado, son los únicos métodos en hacerlo
   mutations: {
-    setUsuario(state, payload) {
-      state.token = payload;
-      if (payload === '') {
+    setUsuario(state, token) {
+      state.token = token;
+      if (token === '') {
         state.user = '';
       } else {
-        const info = jwt(payload);
+        const info = jwt(token);
         // console.log(`Sesion token: ${state.token}`);
         // console.log(`Contenido sesion token: ${JSON.stringify(info)}`);
         state.user = info.user;
@@ -31,12 +31,12 @@ export default new Vuex.Store({
   actions: {
     // Guardamos los datos que necesitamos de la sesion, esto sería si lo hiciesmos asíncrono
     // Uso una acción y no una mutación porque no sabemos el tiempo que tarda en gaudar en storage
-    guardarSesion({ commit }, payload) {
+    guardarSesion({ commit }, token) {
       // Guardamos el token en el almacenamiento del navegador
       // console.log(`Guardar sesion token: ${payload}`);
-      localStorage.setItem('token-notas', payload);
+      localStorage.setItem('token-notas', token);
       // Confirmamos el estado
-      commit('setUsuario', payload);
+      commit('setUsuario', token);
     },
     // Cierra la sesion
     cerrarSesion({ commit }) {
