@@ -17,7 +17,7 @@
     </b-card-text>
     <b-list-group flush>
       <b-list-group-item></b-list-group-item>
-      <b-list-group-item>Autor: Patata Brava</b-list-group-item>
+      <b-list-group-item>Autor: {{user.username}}</b-list-group-item>
       <b-list-group-item></b-list-group-item>
     </b-list-group>
     <b-button to="/notas" variant="outline-primary">Volver</b-button>
@@ -31,6 +31,7 @@
 
 <script>
 import NotasService from '@/services/NotasService';
+import { mapState } from 'vuex';
 
 export default {
   name: 'Nota',
@@ -40,7 +41,7 @@ export default {
     };
   },
   created() {
-    NotasService.getById(this.$route.params.id)
+    NotasService.getById(this.$route.params.id, this.token)
       .then((item) => {
         this.nota = item.data;
         console.log(this.nota);
@@ -49,6 +50,7 @@ export default {
         this.$router.push({ name: 'Error404' });
       });
   },
+  computed: mapState(['token', 'user']),
 };
 </script>
 

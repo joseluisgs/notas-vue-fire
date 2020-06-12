@@ -6,29 +6,47 @@ const resource = 'notas';
 // Operaciones
 export default {
   // Devuleve todo
-  get() {
-    return Service.get(resource);
+  get(token) {
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    return Service.get(resource, config);
   },
   // Devuelve por id
-  getById(id) {
-    return Service.get(`${resource}/${id}`);
+  getById(id, token) {
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    return Service.get(`${resource}/${id}`, config);
     // return Service.get(resource, id);
   },
   // Crea uno nuevo
-  post(data) {
-    return Service.post(resource, data);
+  post(data, token) {
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    return Service.post(resource, data, config);
   },
   // Actualiza con put
-  put(id, data) {
-    return Service.put(`${resource}/${id}`, data);
+  put(id, data, token) {
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    return Service.put(`${resource}/${id}`, data, config);
   },
   // Actualizo con patch
-  patch(id, data) {
-    return Service.patch(`${resource}/${id}`, data);
+  patch(id, data, token) {
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    return Service.patch(`${resource}/${id}`, data, config);
   },
   // Elimina
-  delete(id) {
-    return Service.delete(`${resource}/${id}`);
+  delete(id, token) {
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    return Service.delete(`${resource}/${id}`, config);
   },
 };
 

@@ -80,6 +80,7 @@
 
 <script>
 import NotasService from '@/services/NotasService';
+import { mapState } from 'vuex';
 
 export default {
   // Como me llamo
@@ -118,6 +119,7 @@ export default {
   },
   // campos computados
   computed: {
+    ...mapState(['token']),
     // Para manear el filtro
     filtroNotas() {
       return this.notas.filter((nota) => nota.titulo.toLowerCase().includes(this.busqueda.toLowerCase()) || nota.descripcion.toLowerCase().includes(this.busqueda.toLowerCase()));
@@ -134,17 +136,17 @@ export default {
       // eslint-disable-next-line no-underscore-dangle
       // this.nota = this.notas.find((n) => n._id === id);
       // La consultamos del servicio, así praticamos
-      NotasService.getById(id)
+      NotasService.getById(id, this.token)
         .then((res) => {
           this.nota = res.data;
         })
-        .catch((e) => {
-          console.log(e.response);
+        .catch((error) => {
+          this.verAlerta(`No se puede ver la nota: ${error.response.data.mensaje}`, 'danger');
         });
     },
     // elimina una nota
     eliminarNota(id) {
-      NotasService.delete(id)
+      NotasService.delete(id, this.token)
         // Si va bien
         .then((res) => {
           // Elimino del array
@@ -152,38 +154,30 @@ export default {
           const index = this.notas.findIndex((item) => item._id === res.data._id);
           this.notas.splice(index, 1);
           // Alerta de mensaje
-          this.alerta.texto = '¡Nota eliminada!';
-          this.alerta.color = 'danger';
-          this.showAlert();
+          this.verAlerta('¡Nota eliminada!', 'danger');
         })
         // Si falla
-        .catch((e) => {
-          console.log(e.response);
+        .catch((error) => {
+          console.log(error.response);
           // Alerta de mensaje
-          this.alerta.texto = 'No se ha podido eliminar la nota';
-          this.alerta.color = 'danger';
-          this.showAlert();
+          this.verAlerta(`No se ha podido eliminar la nota ${error.response.data.mensaje}`, 'danger');
         });
     },
     // agrega una nueva nota
     agregarNota() {
-      NotasService.post(this.nota)
+      NotasService.post(this.nota, this.token)
         // Si todo va bien
         .then((res) => {
         // Agrega al inicio de nuestro array notas
           this.notas.unshift(res.data);
           // Alerta de mensaje
-          this.alerta.texto = '¡Nota agregada!';
-          this.alerta.color = 'success';
-          this.showAlert();
+          this.verAlerta('¡Nota agregada!', 'success');
         })
         // Si falla
-        .catch((e) => {
-          console.log(e.response);
+        .catch((error) => {
+          console.log(error.response);
           // Alerta de mensaje
-          this.alerta.texto = 'No se ha podido insertar la nota';
-          this.alerta.color = 'danger';
-          this.showAlert();
+          this.verAlerta(`No se puede insertar la nota: ${error.response.data.mensaje}`, 'danger');
         });
       this.formAgregar = false;
       this.nota = {};
@@ -191,11 +185,10 @@ export default {
     // edita una nueva nota
     editarNota() {
       // eslint-disable-next-line no-underscore-dangle
-      NotasService.put(this.nota._id, this.nota)
-        .then((res) => {
+      NotasService.put(this.nota._id, this.nota, this.token)
+        .then(() => {
           // Cambialos los datos en la tabla (podríamos ahorranos esto cargando la tabla directamente con el serviio,
           // pero es mas rapido así)
-          console.log(res);
           // eslint-disable-next-line no-underscore-dangle
           // eslint-disable-next-line no-underscore-dangle
           const notaMod = this.notas.find((n) => (n._id === this.nota._id));
@@ -203,17 +196,13 @@ export default {
           notaMod.titulo = this.nota.titulo;
           notaMod.descripcion = this.nota.descripcion;
           // Alerta de mensaje
-          this.alerta.texto = 'Nota actualizada';
-          this.alerta.color = 'success';
-          this.showAlert();
+          this.verAlerta('¡Nota modificada!', 'success');
           this.nota = {};
         })
-        .catch((e) => {
-          console.log(e.response);
+        .catch((error) => {
+          console.log(error.response);
           // Alerta de mensaje
-          this.alerta.texto = 'No se ha podido modificar la nota';
-          this.alerta.color = 'danger';
-          this.showAlert();
+          this.verAlerta(`No se ha podido modificar la nota: ${error.response.data.mensaje}`, 'danger');
           this.nota = {};
         });
       // Ocultamos y limpiamos
@@ -225,16 +214,13 @@ export default {
       this.alerta.color = 'info';
       this.showAlert(); */
       // Consultamos todas las notas
-      NotasService.get()
+      NotasService.get(this.token)
         .then((notas) => {
           this.notas = notas.data;
         })
-        .catch((e) => {
+        .catch((error) => {
           // Alerta de mensaje
-          console.log(e.response.data.error.errors.nombre.message);
-          this.alerta.texto = 'No se han podido cargar las notas desde el servidor';
-          this.alerta.color = 'danger';
-          this.showAlert();
+          this.verAlerta(`No se ha cargar las notas: ${error.response.data.mensaje}`, 'danger');
         });
     },
     // Muestra una nota
@@ -282,6 +268,12 @@ export default {
             this.eliminarNota(item._id);
           }
         });
+    },
+    // Metodos de la alerta
+    verAlerta(texto, color) {
+      this.alerta.texto = texto;
+      this.alerta.color = color;
+      this.showAlert();
     },
   },
 };

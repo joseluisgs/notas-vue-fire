@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import jwt from 'jwt-decode';
-import router from '../router';
 
 Vue.use(Vuex);
 
@@ -36,7 +35,6 @@ export default new Vuex.Store({
       localStorage.setItem('token-notas', token);
       // Confirmamos el estado
       commit('setUsuario', token);
-      router.push({ name: 'Home' });
     },
     // Cierra la sesion
     cerrarSesion({ commit }) {
@@ -45,7 +43,6 @@ export default new Vuex.Store({
       // Borramos el token
       localStorage.removeItem('token-notas');
       // Volvemos a home
-      router.push({ name: 'Login' });
     },
     // Lee el token desde el almacenamiento
     leerToken({ commit }) {

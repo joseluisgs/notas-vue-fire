@@ -13,7 +13,7 @@
             <b-nav-item to="/">Inicio</b-nav-item>
             <b-nav-item to="/notas">Notas</b-nav-item>
             <b-nav-item to="/about">About</b-nav-item>
-            <b-nav-item to="/about" v-if="isAdmin()">Admin</b-nav-item>
+            <b-nav-item to="/admin" v-if="isAdmin()">Admin</b-nav-item>
           </b-navbar-nav>
 
           <!-- Right aligned nav items -->
@@ -63,6 +63,7 @@ export default {
       AuthService.logout(this.token)
         .then(() => {
           this.cerrarSesion();
+          this.$router.push({ name: 'Login' });
         })
         .catch((error) => {
           console.log(error.response.data.mensaje);

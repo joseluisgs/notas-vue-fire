@@ -4,6 +4,8 @@ import Home from '@/views/Home.vue';
 import Error404 from '@/views/Error404.vue';
 import Notas from '@/views/Notas.vue';
 import Nota from '@/views/Nota.vue';
+import store from '../store';
+
 
 Vue.use(VueRouter);
 
@@ -38,15 +40,29 @@ const routes = [
     name: 'Notas',
     // Carga perezosa component: () => import(/* webpackChunkName: "about" */ '@/views/Notas.vue'),
     component: Notas,
+    meta: { isAuth: true },
   },
   {
     path: '/notas/:id', // La ruta y el parámetro
     name: 'Nota', // el alias de la ruta
     component: Nota, // Componente a carga
-    /* // Requerimos que estamos autenticados.
-    meta: { // Añadimos metadatos a la ruta
-      auth: true, // Exigimos que esté autenticado
-    }, */
+    meta: { isAuth: true },
+  },
+  // Para admin
+  {
+    // Filtrado adicional solo para esta ruta
+    beforeEnter: ((to, from, next) => {
+      if (!store.getters.isActivo) {
+        next({ name: 'Login' });
+      } else {
+        next();
+      }
+      next(store.getters.isAdmin);
+    }),
+    path: '/admin',
+    name: 'Admin',
+    component: () => import(/* webpackChunkName: "about" */ '@/views/Admin.vue'),
+    meta: { isAuth: true },
   },
   // Otro destino que no esté ene path
   // Error 404
@@ -61,6 +77,16 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes,
+});
+
+// Hook de acceso a rutas protegidas a nivel global. Identificamos los autenticados
+router.beforeEach((to, from, next) => {
+  const rutaProtegida = to.matched.some((record) => record.meta.isAuth);
+  if (rutaProtegida && !store.getters.isActivo) {
+    next({ name: 'Login' });
+  } else {
+    next();
+  }
 });
 
 export default router;

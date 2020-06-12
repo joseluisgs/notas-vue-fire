@@ -53,6 +53,7 @@ export default {
         .then((res) => {
           // console.log(res.data.token);
           this.guardarSesion(res.data.token);
+          this.$router.push({ name: 'Home' });
         })
         .catch((error) => {
           if (error.response.data.mensaje) {
