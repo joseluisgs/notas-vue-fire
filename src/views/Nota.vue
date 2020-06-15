@@ -6,11 +6,11 @@
 <div class="row justify-content-center">
   <b-card
     :title="nota.titulo"
-    img-src="https://picsum.photos/600/300/?image=25"
+    :img-src="nota.fichero ? nota.fichero.url : 'https://picsum.photos/600/300/?image=25'"
     img-alt="Image"
     img-top
     tag="article"
-    style="max-width: 200rem;"
+    style="max-width: 200rem; max-heigh: 200rem;"
   >
     <b-card-text>
       {{nota.descripcion}}.
