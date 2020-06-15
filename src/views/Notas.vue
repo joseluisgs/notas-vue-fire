@@ -66,7 +66,9 @@
       <!-- <template v-slot:cell(#)="row">{{row.item._id}}</template> -->
       <template v-slot:cell(titulo)="row">{{row.item.titulo}}</template>
       <template v-slot:cell(descripcion)="row">{{row.item.descripcion}}</template>
-       <template v-slot:cell(imagen)><b-avatar src="https://placekitten.com/300/300"></b-avatar></template>
+      <template v-slot:cell(imagen)="row">
+        <b-avatar variant="info" :src="row.item.fichero.url ? row.item.fichero.url : ''"></b-avatar>
+      </template>
       <template v-slot:cell(fecha)="row">{{row.item.fecha | moment("D/MM/YYYY, HH:mm")}}</template>
       <template v-slot:cell(acciones)="row">
         <b-button variant="primary" class="btn-sm mx-1 my-1" @click="verNota(row.item._id)" v-b-tooltip.hover title="Ver nota">
