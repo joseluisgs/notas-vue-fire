@@ -88,7 +88,7 @@
 <script>
 import NotasService from '@/services/NotasService';
 import FilesService from '@/services/FilesService';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   // Como me llamo
@@ -138,6 +138,7 @@ export default {
 
   // Mi métodos
   methods: {
+    ...mapActions(['cerrarSesion']),
     // activa la edición.
     activarEdicion(id) {
       this.formEditar = true;
@@ -152,6 +153,8 @@ export default {
         })
         .catch((error) => {
           this.verAlerta(`No se puede ver la nota: ${error.response.data.mensaje}`, 'danger');
+          // si el fallo es de la sesión lo desviamos a login
+          // this.comprobarSesion(error.response.status);
         });
     },
     // elimina una nota
@@ -170,6 +173,8 @@ export default {
         .catch((error) => {
           // Alerta de mensaje
           this.verAlerta(`No se ha podido eliminar la nota ${error.response.data.mensaje}`, 'danger');
+          // si el fallo es de la sesión lo desviamos a login
+          // this.comprobarSesion(error.response.status);
         });
     },
     // agrega una nueva nota
@@ -194,6 +199,8 @@ export default {
           console.log(error.response);
           // Alerta de mensaje
           this.verAlerta(`No se puede insertar la imagen asociada: ${error.response.data.mensaje}`, 'danger');
+          // si el fallo es de la sesión lo desviamos a login
+          // this.comprobarSesion(error.response.status);
         });
     },
     // sube una nota
@@ -211,6 +218,8 @@ export default {
           console.log(error.response);
           // Alerta de mensaje
           this.verAlerta(`No se puede insertar la nota: ${error.response.data.mensaje}`, 'danger');
+          // si el fallo es de la sesión lo desviamos a login
+          // this.comprobarSesion(error.response.status);
         });
       this.formAgregar = false;
       this.nota = {};
@@ -237,15 +246,14 @@ export default {
           // Alerta de mensaje
           this.verAlerta(`No se ha podido modificar la nota: ${error.response.data.mensaje}`, 'danger');
           this.nota = {};
+          // si el fallo es de la sesión lo desviamos a login
+          // this.comprobarSesion(error.response.status);
         });
       // Ocultamos y limpiamos
       this.formEditar = false;
     },
     // Carga la lista de notas
     cargarNotas() {
-      /* this.alerta.texto = 'Cargando notas. Por favor, espere...';
-      this.alerta.color = 'info';
-      this.showAlert(); */
       // Consultamos todas las notas
       NotasService.get(this.token)
         .then((notas) => {
@@ -254,6 +262,8 @@ export default {
         .catch((error) => {
           // Alerta de mensaje
           this.verAlerta(`No se ha cargar las notas: ${error.response.data.mensaje}`, 'danger');
+          // si el fallo es de la sesión lo desviamos a login
+          // this.comprobarSesion(error.response.status);
         });
     },
     // Muestra una nota
@@ -307,6 +317,13 @@ export default {
       this.alerta.texto = texto;
       this.alerta.color = color;
       this.showAlert();
+    },
+    // comprobar Sesion
+    comprobarSesion(error) {
+      if (error === 401) {
+        this.cerrarSesion();
+        this.$router.push({ name: 'Login' });
+      }
     },
   },
 };

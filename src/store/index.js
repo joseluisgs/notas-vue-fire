@@ -9,6 +9,7 @@ export default new Vuex.Store({
   state: {
     user: '',
     token: '',
+    exp: '',
   },
   // Modifica el estado, son los únicos métodos en hacerlo
   mutations: {
@@ -16,12 +17,11 @@ export default new Vuex.Store({
       state.token = token;
       if (token === '') {
         state.user = '';
+        state.exp = '';
       } else {
         const info = jwt(token);
-        // console.log(`Sesion token: ${state.token}`);
-        // console.log(`Contenido sesion token: ${JSON.stringify(info)}`);
         state.user = info.user;
-        // console.log(`Usuario sesion: ${JSON.stringify(state.user)}`);
+        state.exp = info.exp;
       }
     },
   },
@@ -56,7 +56,7 @@ export default new Vuex.Store({
   },
   // campos computados o getter
   getters: {
-    isActivo: (state) => state.token !== '',
+    isActivo: (state) => ((state.token !== '') && ((state.exp * 1000) > Date.now())),
     isAdmin: (state) => state.user.role === 'ADMIN',
   },
   modules: {

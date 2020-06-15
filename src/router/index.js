@@ -79,7 +79,7 @@ const router = new VueRouter({
   routes,
 });
 
-// Hook de acceso a rutas protegidas a nivel global. Identificamos los autenticados
+// Hook de acceso a rutas protegidas a nivel global. Identificamos los autenticados y que no ha expirado
 router.beforeEach((to, from, next) => {
   const rutaProtegida = to.matched.some((record) => record.meta.isAuth);
   if (rutaProtegida && !store.getters.isActivo) {
