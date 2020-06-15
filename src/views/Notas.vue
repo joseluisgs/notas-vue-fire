@@ -34,6 +34,11 @@
         <b-form-group id="input-des">
           <b-form-input id="descripcion" type="text" placeholder="Descripción de la nota" required v-model="nota.descripcion" ></b-form-input>
         </b-form-group>
+        <!-- Fichero -->
+        <b-form-group id="input-fichero">
+        <b-form-file class="mt-3" v-model="fichero" plain accept=".jpg, .png, .gif" id="file" ref="file"></b-form-file>
+        <div class="mt-3">Imagen seleccionada: {{ fichero ? fichero.name : '' }}</div>
+        </b-form-group>
         <b-form-group id="input-botones">
           <b-button type="submit" variant="primary mx-2">Agregar</b-button>
           <b-button type="reset" variant="danger mx-2">Cancelar</b-button>
@@ -80,6 +85,7 @@
 
 <script>
 import NotasService from '@/services/NotasService';
+import FilesService from '@/services/FilesService';
 import { mapState } from 'vuex';
 
 export default {
@@ -109,6 +115,8 @@ export default {
       formEditar: false,
       // Para buscar
       busqueda: '',
+      // Fichero
+      fichero: {},
     };
   },
 
@@ -158,17 +166,40 @@ export default {
         })
         // Si falla
         .catch((error) => {
-          console.log(error.response);
           // Alerta de mensaje
           this.verAlerta(`No se ha podido eliminar la nota ${error.response.data.mensaje}`, 'danger');
         });
     },
     // agrega una nueva nota
     agregarNota() {
-      NotasService.post(this.nota, this.token)
+      // Si hay fichero lo subimos
+      const file = this.fichero;
+      if (file.name) {
+        this.agregarNotaConFichero(file);
+      } else {
+        this.subirNota(this.nota);
+      }
+    },
+    // Agrega una nota con Fichero
+    agregarNotaConFichero(file) {
+      FilesService.post(file, this.token)
+        .then((resp) => {
+          const nuevaNota = this.nota;
+          nuevaNota.fichero = resp.data;
+          this.subirNota(nuevaNota);
+        })
+        .catch((error) => {
+          console.log(error.response);
+          // Alerta de mensaje
+          this.verAlerta(`No se puede insertar la imagen asociada: ${error.response.data.mensaje}`, 'danger');
+        });
+    },
+    // sube una nota
+    subirNota(nuevaNota) {
+      NotasService.post(nuevaNota, this.token)
         // Si todo va bien
         .then((res) => {
-        // Agrega al inicio de nuestro array notas
+          // Agrega al inicio de nuestro array notas
           this.notas.unshift(res.data);
           // Alerta de mensaje
           this.verAlerta('¡Nota agregada!', 'success');
@@ -181,6 +212,7 @@ export default {
         });
       this.formAgregar = false;
       this.nota = {};
+      this.fichero = {};
     },
     // edita una nueva nota
     editarNota() {
@@ -189,7 +221,6 @@ export default {
         .then(() => {
           // Cambialos los datos en la tabla (podríamos ahorranos esto cargando la tabla directamente con el serviio,
           // pero es mas rapido así)
-          // eslint-disable-next-line no-underscore-dangle
           // eslint-disable-next-line no-underscore-dangle
           const notaMod = this.notas.find((n) => (n._id === this.nota._id));
           // Solo añadimos los campos que modifico, los otros son iguales
@@ -225,7 +256,6 @@ export default {
     },
     // Muestra una nota
     verNota(id) {
-      // console.log(id);
       // Una forma router.push({ path: `/notas/${id}` }) // -> /notas/123
       this.$router.push({ name: 'Nota', params: { id: `${id}` } });
     },
@@ -244,6 +274,7 @@ export default {
       // Limpiamos los datos y aceptamos
       this.nota = {};
       this.formAgregar = false;
+      this.fichero = '';
     },
     formAceptarEditar() {
       this.editarNota();
