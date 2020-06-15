@@ -19,4 +19,11 @@ export default {
     };
     return Service.post(`${resource}`, formData, config);
   },
+  // Elimina un fichero asociado
+  delete(id, token) {
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    return Service.delete(`${resource}/${id}`, config);
+  },
 };

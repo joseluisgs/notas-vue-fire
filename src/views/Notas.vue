@@ -153,8 +153,6 @@ export default {
         })
         .catch((error) => {
           this.verAlerta(`No se puede ver la nota: ${error.response.data.mensaje}`, 'danger');
-          // si el fallo es de la sesión lo desviamos a login
-          // this.comprobarSesion(error.response.status);
         });
     },
     // elimina una nota
@@ -165,7 +163,14 @@ export default {
           // Elimino del array
           // eslint-disable-next-line no-underscore-dangle
           const index = this.notas.findIndex((item) => item._id === res.data._id);
+          const delNota = this.notas[index];
           this.notas.splice(index, 1);
+          // Borramos la imagen
+          if (delNota.fichero.id) {
+            FilesService.delete(delNota.fichero.id, this.token);
+            // .then((resp) => console.log(resp))
+            // .catch((e) => console.log(e));
+          }
           // Alerta de mensaje
           this.verAlerta('¡Nota eliminada!', 'danger');
         })
@@ -173,8 +178,6 @@ export default {
         .catch((error) => {
           // Alerta de mensaje
           this.verAlerta(`No se ha podido eliminar la nota ${error.response.data.mensaje}`, 'danger');
-          // si el fallo es de la sesión lo desviamos a login
-          // this.comprobarSesion(error.response.status);
         });
     },
     // agrega una nueva nota
@@ -199,8 +202,6 @@ export default {
           console.log(error.response);
           // Alerta de mensaje
           this.verAlerta(`No se puede insertar la imagen asociada: ${error.response.data.mensaje}`, 'danger');
-          // si el fallo es de la sesión lo desviamos a login
-          // this.comprobarSesion(error.response.status);
         });
     },
     // sube una nota
@@ -218,8 +219,6 @@ export default {
           console.log(error.response);
           // Alerta de mensaje
           this.verAlerta(`No se puede insertar la nota: ${error.response.data.mensaje}`, 'danger');
-          // si el fallo es de la sesión lo desviamos a login
-          // this.comprobarSesion(error.response.status);
         });
       this.formAgregar = false;
       this.nota = {};
@@ -246,8 +245,6 @@ export default {
           // Alerta de mensaje
           this.verAlerta(`No se ha podido modificar la nota: ${error.response.data.mensaje}`, 'danger');
           this.nota = {};
-          // si el fallo es de la sesión lo desviamos a login
-          // this.comprobarSesion(error.response.status);
         });
       // Ocultamos y limpiamos
       this.formEditar = false;
@@ -262,8 +259,6 @@ export default {
         .catch((error) => {
           // Alerta de mensaje
           this.verAlerta(`No se ha cargar las notas: ${error.response.data.mensaje}`, 'danger');
-          // si el fallo es de la sesión lo desviamos a login
-          // this.comprobarSesion(error.response.status);
         });
     },
     // Muestra una nota
@@ -317,13 +312,6 @@ export default {
       this.alerta.texto = texto;
       this.alerta.color = color;
       this.showAlert();
-    },
-    // comprobar Sesion
-    comprobarSesion(error) {
-      if (error === 401) {
-        this.cerrarSesion();
-        this.$router.push({ name: 'Login' });
-      }
     },
   },
 };
