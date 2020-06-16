@@ -60,8 +60,10 @@
         </b-form-group>
       </b-form>
     <hr>
-    <!-- Pintamos la tabla del componente boosrapt b-table: https://bootstrap-vue.org/docs/components/table -->
-    <b-table striped responsive hover :items="filtroNotas" :fields="tablaEncabezados" :busy="isCargando">
+    <!-- Pintamos la tabla del componente boosrapt b-table: https://bootstrap-vue.org/docs/components/table
+    Le añadimos paginación y estado de carga-->
+    <b-table id="tabla-notas" striped responsive hover :items="filtroNotas" :fields="tablaEncabezados"
+      :busy="isCargando" :per-page="maxPagina" :current-page="paginaActual">
       <!-- La parte de cargando -->
       <template v-slot:table-busy>
         <div class="text-center text-danger my-2">
@@ -89,6 +91,17 @@
         </b-button>
       </template>
     </b-table>
+    <!--  Paginador unido a la tabla -->
+    <div class="overflow-center">
+      <b-pagination
+        v-model="paginaActual"
+        :total-rows="totalRegistros"
+        :per-page="maxPagina"
+        aria-controls="tabla-notas"
+        align="center"
+      ></b-pagination>
+    <p class="mt-3">Página actual: {{ paginaActual }}</p>
+    </div>
   </div>
 </template>
 
@@ -116,6 +129,9 @@ export default {
         { key: 'acciones', label: 'Acciones' },
       ],
       isCargando: true,
+      // Paginacion
+      maxPagina: 1,
+      paginaActual: 1,
       // Para la alerta
       alerta: { color: 'success', texto: '' },
       dismissSecs: 3,
@@ -142,6 +158,9 @@ export default {
     // Para manear el filtro
     filtroNotas() {
       return this.notas.filter((nota) => nota.titulo.toLowerCase().includes(this.busqueda.toLowerCase()) || nota.descripcion.toLowerCase().includes(this.busqueda.toLowerCase()));
+    },
+    totalRegistros() {
+      return this.notas.length;
     },
   },
 
