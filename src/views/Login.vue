@@ -48,18 +48,17 @@ export default {
   methods: {
     // Incopramos los elementos de Vuex
     ...mapActions(['guardarSesion']),
-    login() {
-      AuthService.login(this.user)
-        .then((res) => {
-          // console.log(res.data.token);
-          this.guardarSesion(res.data.token);
-          this.$router.push({ name: 'Home' });
-        })
-        .catch((error) => {
-          if (error.response.data.mensaje) {
-            this.verAlerta(error.response.data.mensaje, 'danger');
-          }
-        });
+    async login() {
+      try {
+        const res = await AuthService.login(this.user);
+        console.log(res.data.token);
+        this.guardarSesion(res.data.token);
+        this.$router.push({ name: 'Home' });
+      } catch (error) {
+        if (error.response.data.mensaje) {
+          this.verAlerta(error.response.data.mensaje, 'danger');
+        }
+      }
     },
     // Metodos de la alerta
     verAlerta(texto, color) {
