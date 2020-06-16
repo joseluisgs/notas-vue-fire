@@ -51,7 +51,7 @@ export default {
     async login() {
       try {
         const res = await AuthService.login(this.user);
-        console.log(res.data.token);
+        // console.log(res.data.token);
         this.guardarSesion(res.data.token);
         this.$router.push({ name: 'Home' });
       } catch (error) {

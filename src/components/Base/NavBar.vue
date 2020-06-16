@@ -58,17 +58,16 @@ export default {
   methods: {
     ...mapActions(['cerrarSesion', 'leerToken']),
     ...mapGetters(['isActivo', 'isAdmin']),
-    salir() {
+    async salir() {
       // Por si hay que hacer algo en el servidor.
-      AuthService.logout(this.token)
-        .then(() => {
-          this.cerrarSesion();
-          this.$router.push({ name: 'Login' });
-        })
-        .catch((error) => {
-          console.log(error.response.data.mensaje);
-          this.$router.push({ name: 'Login' });
-        });
+      try {
+        await AuthService.logout(this.token);
+        this.cerrarSesion();
+        this.$router.push({ name: 'Login' });
+      } catch (error) {
+        console.log(error.response.data.mensaje);
+        this.$router.push({ name: 'Login' });
+      }
     },
   },
   computed: mapState(['token', 'user']),
