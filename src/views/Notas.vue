@@ -2,6 +2,7 @@
   <div class="container" wit>
     <h1>Notas</h1>
     <hr>
+
     <!-- Ponemos la alerta: https://bootstrap-vue.org/docs/components/alert#alerts -->
     <b-alert
       :show="dismissCountDown"
@@ -11,12 +12,14 @@
       @dismiss-count-down="countDownChanged"
     >{{alerta.texto}}
     </b-alert>
+
     <!-- Mi buscador -->
     <section class="d-flex flex-row-reverse form-inline">
           <b-input-group prepend="Buscar" class="mb-12 mr-sm-12 mb-sm-0">
             <b-input id="buscar" placeholder="Título o descripción" v-model="busqueda"></b-input>
           </b-input-group>
     </section>
+
     <!-- Agregamos el formuario de agregar nota, antes un botón que muestre y oculte el formulario -->
     <!-- https://bootstrap-vue.org/docs/components/form/#form -->
     <template v-if="!formEditar"> <!-- Oculto todo si estoy en agregar -->
@@ -25,6 +28,7 @@
             <b-icon icon="file-plus"></b-icon> Nueva
         </b-button>
       </section>
+
       <!-- Formulario de nueva nota -->
       <b-form @submit.prevent="formAceptarNueva" @reset="formLimpiarNueva" v-if="formAgregar">
         <h4 class="text-center">Agregar nueva Nota</h4>
@@ -45,6 +49,7 @@
         </b-form-group>
       </b-form>
     </template>
+
     <!-- Formulario de editar nota -->
       <b-form @submit.prevent="formAceptarEditar" @reset="formEditar=false" v-if="formEditar">
         <h4 class="text-center">Editar Nota</h4>
@@ -54,24 +59,33 @@
         <b-form-group id="input-des">
           <b-form-input id="descripcion" type="text" placeholder="Descripción de la nota" required v-model="nota.descripcion" ></b-form-input>
         </b-form-group>
+        <!-- Fichero -->
+        <b-form-group id="input-fichero">
+        <b-form-file class="mt-3" v-model="fichero" plain accept=".jpg, .png, .gif" id="file" ref="file"></b-form-file>
+        <!-- <div class="mt-3">Nueva imagen seleccionada: {{ fichero ? fichero.name : '' }}</div> -->
+        </b-form-group>
+        <b-form-group id="input-img">
+          <b-img :src="nota.fichero.url" rounded alt="Rounded image" width="100" v-if="nota.fichero.url"></b-img>
+        </b-form-group>
         <b-form-group id="input-botones">
           <b-button type="submit" variant="warning mx-2">Modificar</b-button>
           <b-button type="reset" variant="danger mx-2">Cancelar</b-button>
         </b-form-group>
       </b-form>
     <hr>
+
     <!-- Pintamos la tabla del componente boosrapt b-table: https://bootstrap-vue.org/docs/components/table
     Le añadimos paginación y estado de carga-->
     <b-table id="tabla-notas" striped responsive hover :items="filtroNotas" :fields="tablaEncabezados"
       :busy="isCargando" :per-page="maxPagina" :current-page="paginaActual">
       <!-- La parte de cargando -->
       <template v-slot:table-busy>
-        <div class="text-center text-danger my-2">
+        <div class="text-center text-primary my-2">
           <b-spinner class="align-middle"></b-spinner>
-          <strong>Loading...</strong>
+          <strong>Cargando...</strong>
         </div>
       </template>
-      <!-- Por cad acelda indicamos como queremos que se renderice y qué campos -->
+      <!-- Por cada acelda indicamos como queremos que se renderice y qué campos -->
       <!-- <template v-slot:cell(#)="row">{{row.item._id}}</template> -->
       <template v-slot:cell(titulo)="row">{{row.item.titulo}}</template>
       <template v-slot:cell(descripcion)="row">{{row.item.descripcion}}</template>
@@ -91,6 +105,7 @@
         </b-button>
       </template>
     </b-table>
+
     <!--  Paginador unido a la tabla -->
     <div class="overflow-center">
       <b-pagination
@@ -171,18 +186,8 @@ export default {
     // activa la edición.
     activarEdicion(id) {
       this.formEditar = true;
-      // cojemos la nota
-      // si lo hago así, el problema es la reactividad, se ve los cambios en la tabla directamente
-      // eslint-disable-next-line no-underscore-dangle
-      // this.nota = this.notas.find((n) => n._id === id);
-      // La consultamos del servicio, así praticamos
-      NotasService.getById(id, this.token)
-        .then((res) => {
-          this.nota = res.data;
-        })
-        .catch((error) => {
-          this.verAlerta(`No se puede ver la nota: ${error.response.data.mensaje}`, 'danger');
-        });
+      // copiamos el objeto, no lo asignamos directamente con el igual {...} para evitar problemas de reactividad
+      this.nota = { ...this.notas.find((n) => n._id === id) };
     },
     // elimina una nota
     async eliminarNota(id) {
@@ -207,7 +212,7 @@ export default {
       // Si hay fichero lo subimos
       try {
         // Subimos la imagen si hay
-        if (this.fichero) {
+        if (this.fichero.name) {
           const img = await FilesService.post(this.fichero, this.token);
           this.nota.fichero = img.data;
         }
@@ -224,29 +229,28 @@ export default {
       }
     },
     // edita una nueva nota
-    editarNota() {
-      // eslint-disable-next-line no-underscore-dangle
-      NotasService.put(this.nota._id, this.nota, this.token)
-        .then(() => {
-          // Cambialos los datos en la tabla (podríamos ahorranos esto cargando la tabla directamente con el serviio,
-          // pero es mas rapido así)
-          // eslint-disable-next-line no-underscore-dangle
-          const notaMod = this.notas.find((n) => (n._id === this.nota._id));
-          // Solo añadimos los campos que modifico, los otros son iguales
-          notaMod.titulo = this.nota.titulo;
-          notaMod.descripcion = this.nota.descripcion;
-          // Alerta de mensaje
-          this.verAlerta('¡Nota modificada!', 'success');
-          this.nota = {};
-        })
-        .catch((error) => {
-          console.log(error.response);
-          // Alerta de mensaje
-          this.verAlerta(`No se ha podido modificar la nota: ${error.response.data.mensaje}`, 'danger');
-          this.nota = {};
-        });
-      // Ocultamos y limpiamos
-      this.formEditar = false;
+    async editarNota() {
+      try {
+        // Primero si hay fichero nuevo lo subimos
+        if (this.fichero.name) {
+          const img = await FilesService.post(this.fichero, this.token);
+          // si tenemos una imagen antigua la borramos
+          if (this.nota.fichero.name) {
+            await FilesService.delete(this.nota.fichero.id, this.token);
+          }
+          // copiamos los datos del nuevo fichero en la nota
+          this.nota.fichero = img.data;
+        }
+        // Actualizamos la nota
+        await NotasService.put(this.nota._id, this.nota, this.token);
+        // recargamos la tabla o actualizamos tod el vector a mano (asís e ven mejor los cambios)
+        this.cargarNotas();
+      } catch (error) {
+        this.verAlerta(`No se ha podido modificar la nota: ${error.response.data.mensaje}`, 'danger');
+      } finally {
+        this.nota = {};
+        this.formEditar = false;
+      }
     },
     // Carga la lista de notas
     async cargarNotas() {
