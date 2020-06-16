@@ -14,11 +14,11 @@
     </b-alert>
 
     <!-- Mi buscador -->
-    <section class="d-flex flex-row-reverse form-inline">
+    <!-- <section class="d-flex flex-row-reverse form-inline">
           <b-input-group prepend="Buscar" class="mb-12 mr-sm-12 mb-sm-0">
             <b-input id="buscar" placeholder="Título o descripción" v-model="busqueda"></b-input>
           </b-input-group>
-    </section>
+    </section> -->
 
     <!-- Agregamos el formuario de agregar nota, antes un botón que muestre y oculte el formulario -->
     <!-- https://bootstrap-vue.org/docs/components/form/#form -->
@@ -73,11 +73,52 @@
         </b-form-group>
       </b-form>
     <hr>
+    <section class="d-flex flex-row-reverse">
+    <!-- Para la búsqeuda -->
+    <b-col lg="5" class="my-1">
+        <b-form-group
+          label="Buscar:"
+          label-cols-sm="3"
+          label-align-sm="right"
+          label-size="sm"
+          label-for="filterInput"
+          class="mb-0"
+        >
+          <b-input-group size="sm">
+            <b-form-input
+              v-model="filter"
+              type="search"
+              id="filterInput"
+              placeholder="Buscar"
+            ></b-form-input>
+            <b-input-group-append>
+              <b-button :disabled="!filter" @click="filter = ''">Limpiar</b-button>
+            </b-input-group-append>
+          </b-input-group>
+        </b-form-group>
+      </b-col>
+      <b-col lg="5" class="my-1">
+        <b-form-group
+          label="Filtro:"
+          label-cols-sm="3"
+          label-align-sm="right"
+          label-size="sm"
+          description="Deja en blanco para buscar en todos los campos"
+          class="mb-0">
+          <!-- Opciones de búsqueda -->
+          <b-form-checkbox-group v-model="filterOn" class="mt-1">
+            <b-form-checkbox value="titulo">Título</b-form-checkbox>
+            <b-form-checkbox value="descripcion">Descripción</b-form-checkbox>
+            <!--<b-form-checkbox value="fecha">Fecha</b-form-checkbox> -->
+          </b-form-checkbox-group>
+        </b-form-group>
+      </b-col>
+    </section>
 
     <!-- Pintamos la tabla del componente boosrapt b-table: https://bootstrap-vue.org/docs/components/table
     Le añadimos paginación y estado de carga-->
-    <b-table id="tabla-notas" striped responsive hover :items="filtroNotas" :fields="tablaEncabezados"
-      :busy="isCargando" :per-page="maxPagina" :current-page="paginaActual">
+    <b-table id="tabla-notas" striped responsive hover :items="notas" :fields="tablaEncabezados"
+      :busy="isCargando" :per-page="maxPagina" :current-page="paginaActual" :filter="filter" :filterIncludedFields="filterOn">
       <!-- La parte de cargando -->
       <template v-slot:table-busy>
         <div class="text-center text-primary my-2">
@@ -92,7 +133,7 @@
       <template v-slot:cell(imagen)="row">
         <b-avatar variant="info" :src="row.item.fichero.url ? row.item.fichero.url : ''"></b-avatar>
       </template>
-      <template v-slot:cell(fecha)="row">{{row.item.fecha | moment("D/MM/YYYY, HH:mm")}}</template>
+      <template v-slot:cell(fecha)="row">{{row.item.fecha | moment("DD/MM/YYYY, HH:mm")}}</template>
       <template v-slot:cell(acciones)="row">
         <b-button variant="primary" class="btn-sm mx-1 my-1" @click="verNota(row.item._id)" v-b-tooltip.hover title="Ver nota">
           <b-icon icon="card-text" aria-hidden="true"></b-icon>
@@ -157,7 +198,9 @@ export default {
       // Mustra elf ormulario de editar una nota
       formEditar: false,
       // Para buscar
-      busqueda: '',
+      // busqueda: '', Por lsi lo queremos hacer manual con nuestro cuadro de búsqueda, usaré el de Vue Boostrapt
+      filter: null,
+      filterOn: [],
       // Fichero
       fichero: {},
     };
@@ -171,10 +214,10 @@ export default {
   // campos computados
   computed: {
     ...mapState(['token']),
-    // Para manear el filtro
-    filtroNotas() {
-      return this.notas.filter((nota) => nota.titulo.toLowerCase().includes(this.busqueda.toLowerCase()) || nota.descripcion.toLowerCase().includes(this.busqueda.toLowerCase()));
-    },
+    // Para manear el filtro, en vez de psar la lista de notas pasa esto y te ahorras el filtro, pero ya que lo hace él lo dejaré el suyo
+    // filtroNotas() {
+    //   return this.notas.filter((nota) => nota.titulo.toLowerCase().includes(this.busqueda.toLowerCase()) || nota.descripcion.toLowerCase().includes(this.busqueda.toLowerCase()));
+    // },
     totalRegistros() {
       return this.notas.length;
     },
@@ -318,6 +361,12 @@ export default {
       this.alerta.texto = texto;
       this.alerta.color = color;
       this.showAlert();
+    },
+    // Evento para filtrar
+    onFiltered(filteredItems) {
+      // Trigger pagination to update the number of buttons/pages due to filtering
+      this.totalRegistros = filteredItems.length;
+      this.paginaActual = 1;
     },
   },
 };
