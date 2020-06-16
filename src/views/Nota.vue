@@ -40,15 +40,13 @@ export default {
       nota: {}, // Para agregar una nota
     };
   },
-  created() {
-    NotasService.getById(this.$route.params.id, this.token)
-      .then((item) => {
-        this.nota = item.data;
-        // console.log(this.nota);
-      })
-      .catch(() => {
-        this.$router.push({ name: 'Error404' });
-      });
+  async created() {
+    try {
+      const item = await NotasService.getById(this.$route.params.id, this.token);
+      this.nota = item.data;
+    } catch (error) {
+      this.$router.push({ name: 'Error404' });
+    }
   },
   computed: mapState(['token', 'user']),
 };

@@ -61,7 +61,14 @@
       </b-form>
     <hr>
     <!-- Pintamos la tabla del componente boosrapt b-table: https://bootstrap-vue.org/docs/components/table -->
-    <b-table striped responsive hover :items="filtroNotas" :fields="tablaEncabezados">
+    <b-table striped responsive hover :items="filtroNotas" :fields="tablaEncabezados" :busy="isCargando">
+      <!-- La parte de cargando -->
+      <template v-slot:table-busy>
+        <div class="text-center text-danger my-2">
+          <b-spinner class="align-middle"></b-spinner>
+          <strong>Loading...</strong>
+        </div>
+      </template>
       <!-- Por cad acelda indicamos como queremos que se renderice y qué campos -->
       <!-- <template v-slot:cell(#)="row">{{row.item._id}}</template> -->
       <template v-slot:cell(titulo)="row">{{row.item.titulo}}</template>
@@ -99,6 +106,7 @@ export default {
     return {
       nota: {}, // Para agregar una nota
       notas: [], // Lista de notas
+      // Para la tabla
       tablaEncabezados: [
         // { key: '#', sortable: true, label: '#' },
         { key: 'titulo', sortable: true, label: 'Título' },
@@ -107,6 +115,7 @@ export default {
         { key: 'fecha', sortable: true, label: 'Fecha' },
         { key: 'acciones', label: 'Acciones' },
       ],
+      isCargando: true,
       // Para la alerta
       alerta: { color: 'success', texto: '' },
       dismissSecs: 3,
@@ -250,16 +259,18 @@ export default {
       this.formEditar = false;
     },
     // Carga la lista de notas
-    cargarNotas() {
+    async cargarNotas() {
+      this.isCargando = true;
       // Consultamos todas las notas
-      NotasService.get(this.token)
-        .then((notas) => {
-          this.notas = notas.data;
-        })
-        .catch((error) => {
-          // Alerta de mensaje
-          this.verAlerta(`No se ha cargar las notas: ${error.response.data.mensaje}`, 'danger');
-        });
+      try {
+        const res = await NotasService.get(this.token);
+        this.notas = res.data;
+      } catch (error) {
+        // Alerta de mensaje
+        this.verAlerta(`No se ha cargar las notas: ${error.response.data.mensaje}`, 'danger');
+      } finally {
+        this.isCargando = false;
+      }
     },
     // Muestra una nota
     verNota(id) {
