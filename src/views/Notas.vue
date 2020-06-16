@@ -243,6 +243,7 @@ export default {
         }
         // Actualizamos la nota
         await NotasService.put(this.nota._id, this.nota, this.token);
+        this.verAlerta('¡Nota modificada!', 'success');
         // recargamos la tabla o actualizamos tod el vector a mano (asís e ven mejor los cambios)
         this.cargarNotas();
       } catch (error) {
