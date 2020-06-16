@@ -10,7 +10,7 @@
     img-alt="Image"
     img-top
     tag="article"
-    style="max-width: 100rem; max-heigh: 100rem;"
+    style="max-width: 33rem;"
   >
     <b-card-text>
       {{nota.descripcion}}.

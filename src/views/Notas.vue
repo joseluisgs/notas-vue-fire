@@ -203,48 +203,25 @@ export default {
       }
     },
     // agrega una nueva nota
-    agregarNota() {
+    async agregarNota() {
       // Si hay fichero lo subimos
-      const file = this.fichero;
-      if (file.name) {
-        this.agregarNotaConFichero(file);
-      } else {
-        this.subirNota(this.nota);
+      try {
+        // Subimos la imagen si hay
+        if (this.fichero) {
+          const img = await FilesService.post(this.fichero, this.token);
+          this.nota.fichero = img.data;
+        }
+        // Subimos la nota
+        const nota = await NotasService.post(this.nota, this.token);
+        this.notas.unshift(nota.data);
+        this.verAlerta('¡Nota agregada!', 'success');
+      } catch (error) {
+        this.verAlerta(`No se puede insertar la nota completa: ${error.response.data.mensaje}`, 'danger');
+      } finally {
+        this.formAgregar = false;
+        this.nota = {};
+        this.fichero = {};
       }
-    },
-    // Agrega una nota con Fichero
-    agregarNotaConFichero(file) {
-      FilesService.post(file, this.token)
-        .then((resp) => {
-          const nuevaNota = this.nota;
-          nuevaNota.fichero = resp.data;
-          this.subirNota(nuevaNota);
-        })
-        .catch((error) => {
-          console.log(error.response);
-          // Alerta de mensaje
-          this.verAlerta(`No se puede insertar la imagen asociada: ${error.response.data.mensaje}`, 'danger');
-        });
-    },
-    // sube una nota
-    subirNota(nuevaNota) {
-      NotasService.post(nuevaNota, this.token)
-        // Si todo va bien
-        .then((res) => {
-          // Agrega al inicio de nuestro array notas
-          this.notas.unshift(res.data);
-          // Alerta de mensaje
-          this.verAlerta('¡Nota agregada!', 'success');
-        })
-        // Si falla
-        .catch((error) => {
-          console.log(error.response);
-          // Alerta de mensaje
-          this.verAlerta(`No se puede insertar la nota: ${error.response.data.mensaje}`, 'danger');
-        });
-      this.formAgregar = false;
-      this.nota = {};
-      this.fichero = {};
     },
     // edita una nueva nota
     editarNota() {
