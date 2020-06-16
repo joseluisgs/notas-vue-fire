@@ -106,6 +106,7 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
 import NotasService from '@/services/NotasService';
 import FilesService from '@/services/FilesService';
 import { mapState, mapActions } from 'vuex';
@@ -130,7 +131,7 @@ export default {
       ],
       isCargando: true,
       // Paginacion
-      maxPagina: 1,
+      maxPagina: 5,
       paginaActual: 1,
       // Para la alerta
       alerta: { color: 'success', texto: '' },
@@ -184,29 +185,22 @@ export default {
         });
     },
     // elimina una nota
-    eliminarNota(id) {
-      NotasService.delete(id, this.token)
-        // Si va bien
-        .then((res) => {
-          // Elimino del array
-          // eslint-disable-next-line no-underscore-dangle
-          const index = this.notas.findIndex((item) => item._id === res.data._id);
-          const delNota = this.notas[index];
-          this.notas.splice(index, 1);
-          // Borramos la imagen
-          if (delNota.fichero.id) {
-            FilesService.delete(delNota.fichero.id, this.token);
-            // .then((resp) => console.log(resp))
-            // .catch((e) => console.log(e));
-          }
-          // Alerta de mensaje
-          this.verAlerta('¡Nota eliminada!', 'danger');
-        })
-        // Si falla
-        .catch((error) => {
-          // Alerta de mensaje
-          this.verAlerta(`No se ha podido eliminar la nota ${error.response.data.mensaje}`, 'danger');
-        });
+    async eliminarNota(id) {
+      try {
+        const res = await NotasService.delete(id, this.token);
+        // Elimino del array
+        const index = this.notas.findIndex((item) => item._id === res.data._id);
+        const delNota = this.notas[index];
+        this.notas.splice(index, 1);
+        // Borramos la imagen
+        if (delNota.fichero.id) {
+          await FilesService.delete(delNota.fichero.id, this.token);
+        }
+        // Alerta de mensaje
+        this.verAlerta('¡Nota eliminada!', 'danger');
+      } catch (error) {
+        this.verAlerta(`No se ha podido eliminar la nota ${error.response.data.mensaje}`, 'danger');
+      }
     },
     // agrega una nueva nota
     agregarNota() {
