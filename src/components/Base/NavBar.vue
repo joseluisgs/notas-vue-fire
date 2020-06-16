@@ -13,7 +13,7 @@
             <b-nav-item to="/">Inicio</b-nav-item>
             <b-nav-item to="/notas">Notas</b-nav-item>
             <b-nav-item to="/about">About</b-nav-item>
-            <b-nav-item to="/admin" v-if="isAdmin()">Admin</b-nav-item>
+            <b-nav-item to="/admin" v-if="isAdmin() && isActivo()">Admin</b-nav-item>
           </b-navbar-nav>
 
           <!-- Right aligned nav items -->
