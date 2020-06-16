@@ -28,6 +28,7 @@
       <input
         type="password"
         class="form-control my-2"
+        placeholder="password"
         required
         v-model="user.password"
       />
@@ -53,15 +54,14 @@ export default {
     };
   },
   methods: {
-    registrar() {
-      AuthService.register(this.user)
-        .then(() => {
-          this.verAlerta('Usuario registrado', 'success');
-          this.$router.push({ name: 'Login' });
-        })
-        .catch((error) => {
-          this.verAlerta(error.response.data.mensaje, 'danger');
-        });
+    async registrar() {
+      try {
+        await AuthService.register(this.user);
+        this.verAlerta('Usuario registrado', 'success');
+        this.$router.push({ name: 'Login' });
+      } catch (error) {
+        this.verAlerta(error.response.data.mensaje, 'danger');
+      }
     },
     // Metodos de la alerta
     verAlerta(texto, color) {

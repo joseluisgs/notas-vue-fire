@@ -22,6 +22,7 @@
         type="password"
         class="form-control my-2"
         required
+        placeholder="password"
         v-model="user.password"
       />
       <b-button variant="primary" type="submit">Acceder</b-button>
