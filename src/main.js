@@ -7,7 +7,7 @@ import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 // Moment
 import VueMoment from 'vue-moment';
 import moment from 'moment'; // Moment en espñol
-// Otros
+// VUE
 import App from './App.vue';
 import router from './router';
 import store from './store';
@@ -15,6 +15,7 @@ import store from './store';
 // configuramos su css
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+
 // Install BootstrapVue
 Vue.use(BootstrapVue);
 // Optionally install the BootstrapVue icon components plugin
