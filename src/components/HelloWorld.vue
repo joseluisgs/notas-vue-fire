@@ -1,6 +1,8 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
+    <p>Aplicación con un Backend hecho en Node.js, MongoDB y Firebase usando JWT.</p>
+    <p>Backen disponible: <a href="https://github.com/joseluisgs/notas-back-nem" target="_blank" rel="noopener">notas-back-nem</a>. </p>
     <p>
       Para desarrollar un proyecto en Vue.js, no olvides consultar:
       <a href="https://cli.vuejs.org" target="_blank" rel="noopener">documentación vue-cli</a>.
