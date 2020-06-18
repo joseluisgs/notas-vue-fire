@@ -8,7 +8,7 @@ Una aplicación de notas usando Vue.js. Como siempre para uso docente y educativ
 [![Licence](https://img.shields.io/github/license/joseluisgs/NodeMonRest)](https://github.com/joseluisgs/NodeMonRest/blob/master/LICENSE)
 
 ## Acerca de
-Este proyecto tiene como objetivo hacer la parte de frontend usando la tecnología [Vue.js](https://es.vuejs.org/index.html) y distintas tecnologías asociadas. Solo para fines educativos. El backend a consumir es [notas-back-nem](https://github.com/joseluisgs/notas-back-nem)
+Este proyecto tiene como objetivo hacer la parte de frontend usando la tecnología [Vue.js](https://es.vuejs.org/index.html) y distintas tecnologías asociadas. Solo para fines educativos. El backend a consumir está completamente desarrollado en [Firebase](https://firebase.google.com/)
 
 ### Project setup
 ```
