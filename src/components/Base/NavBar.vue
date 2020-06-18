@@ -13,17 +13,24 @@
             <b-nav-item to="/">Inicio</b-nav-item>
             <b-nav-item to="/notas">Notas</b-nav-item>
             <b-nav-item to="/about">About</b-nav-item>
+            <b-nav-item to="/admin" v-if="isAdmin() && isActivo()">Admin</b-nav-item>
           </b-navbar-nav>
 
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto">
             <b-nav-item-dropdown right>
               <!-- Using 'button-content' slot -->
-              <template v-slot:button-content>
+              <template v-slot:button-content v-if="!isActivo()">
                 <b-icon icon="person"></b-icon>Usuario
               </template>
-              <b-dropdown-item href="#"><b-icon icon="card-heading"></b-icon> Perfil</b-dropdown-item>
-              <b-dropdown-item href="#"><b-icon icon="person-check"></b-icon> Entrar</b-dropdown-item>
+              <template v-slot:button-content v-else>
+                <b-icon icon="person-fill"></b-icon>{{user.username}}
+              </template>
+              <template v-if="!isActivo()">
+                <b-dropdown-item to="/login"><b-icon icon="box-arrow-in-right"></b-icon> Entrar</b-dropdown-item>
+                <b-dropdown-item to="/registrar"><b-icon icon="person-check"></b-icon> Registrar</b-dropdown-item>
+              </template>
+             <b-dropdown-item @click="salir" v-else><b-icon icon="box-arrow-in-left"></b-icon> Salir</b-dropdown-item>
               <b-dropdown-item href="https://twitter.com/joseluisgonsan" target="_blank"><b-icon icon="info" mx-2></b-icon>Contacto</b-dropdown-item>
             </b-nav-item-dropdown>
           </b-navbar-nav>
@@ -32,3 +39,37 @@
       <br />
     </section>
 </template>
+
+<script>
+import AuthService from '@/services/AuthService';
+import { mapState, mapActions, mapGetters } from 'vuex';
+
+export default {
+  name: 'NavBar',
+  data() {
+    return {
+      conectado: this.isActivo(),
+    };
+  },
+  // Al crearme cargamos el token si existe
+  created() {
+    this.leerToken();
+  },
+  methods: {
+    ...mapActions(['cerrarSesion', 'leerToken']),
+    ...mapGetters(['isActivo', 'isAdmin']),
+    async salir() {
+      // Por si hay que hacer algo en el servidor.
+      try {
+        await AuthService.logout(this.token);
+        this.cerrarSesion();
+        this.$router.push({ name: 'Login' });
+      } catch (error) {
+        console.log(error.response.data.mensaje);
+        this.$router.push({ name: 'Login' });
+      }
+    },
+  },
+  computed: mapState(['token', 'user']),
+};
+</script>

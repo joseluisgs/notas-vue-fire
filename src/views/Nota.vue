@@ -6,18 +6,18 @@
 <div class="row justify-content-center">
   <b-card
     :title="nota.titulo"
-    img-src="https://picsum.photos/600/300/?image=25"
+    :img-src="nota.fichero ? nota.fichero.url : 'https://picsum.photos/600/300/?image=25'"
     img-alt="Image"
     img-top
     tag="article"
-    style="max-width: 200rem;"
+    style="max-width: 33rem;"
   >
     <b-card-text>
       {{nota.descripcion}}.
     </b-card-text>
     <b-list-group flush>
       <b-list-group-item></b-list-group-item>
-      <b-list-group-item>Autor: Patata Brava</b-list-group-item>
+      <b-list-group-item>Autor: {{user.username}}</b-list-group-item>
       <b-list-group-item></b-list-group-item>
     </b-list-group>
     <b-button to="/notas" variant="outline-primary">Volver</b-button>
@@ -31,6 +31,7 @@
 
 <script>
 import NotasService from '@/services/NotasService';
+import { mapState } from 'vuex';
 
 export default {
   name: 'Nota',
@@ -39,16 +40,15 @@ export default {
       nota: {}, // Para agregar una nota
     };
   },
-  created() {
-    NotasService.getById(this.$route.params.id)
-      .then((item) => {
-        this.nota = item.data;
-        console.log(this.nota);
-      })
-      .catch(() => {
-        this.$router.push({ name: 'Error404' });
-      });
+  async created() {
+    try {
+      const item = await NotasService.getById(this.$route.params.id, this.token);
+      this.nota = item.data;
+    } catch (error) {
+      this.$router.push({ name: 'Error404' });
+    }
   },
+  computed: mapState(['token', 'user']),
 };
 </script>
 
