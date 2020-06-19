@@ -24,6 +24,7 @@ const auth = firebase.auth(); // Autenticación
 const storage = firebase.storage(); // Almacenamiento
 const { currentUser } = auth;
 
+// imprimimos el nombre del proyecto, esto espor depurar, luego quitar
 console.log(defaultProject.name); // "[DEFAULT]"console.log(defaultProject.name);  // "[DEFAULT]"
 
 // Aquí si quremos podriamos exportar las colecciones

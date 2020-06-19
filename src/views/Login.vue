@@ -25,8 +25,13 @@
         placeholder="password"
         v-model="user.password"
       />
-      <b-button variant="primary" type="submit">Acceder</b-button>
+      <b-button variant="primary mx-2" type="submit">Acceder</b-button>
     </form>
+    <div>
+      <hr>
+      <h4>o identificate con tu cuenta de:</h4>
+      <b-button variant="outline-danger" @click="loginGoogle">Google</b-button>
+    </div>
   </div>
 </template>
 
@@ -59,6 +64,10 @@ export default {
       } catch (error) {
         this.verAlerta(error, 'danger');
       }
+    },
+    // Login con google
+    loginGoogle() {
+      console.log('login google');
     },
     // Metodos de la alerta
     verAlerta(texto, color) {
