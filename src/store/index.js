@@ -29,7 +29,6 @@ export default new Vuex.Store({
       if (user) {
         commit('setUsuario', user);
         localStorage.setItem('user-notas', JSON.stringify(user));
-        console.log(user);
       } else {
         commit('setUsuario', null);
       }
@@ -44,20 +43,20 @@ export default new Vuex.Store({
       localStorage.removeItem('user-notas');
       // Volvemos a home
     },
-    // Lee el usuario desde el almacenamiento
-    // leerUsuario({ commit }) {
-    //   const user = localStorage.getItem('user-notas');
-    //   if (user) {
-    //     commit('setUsuario', user);
-    //     commit('setActivo', true);
-    //   } else {
-    //     commit('setUsuario', '');
-    //   }
-    // },
+    // Lee el usuario desde el almacenamiento,
+    // no es necesario por el evento en tiempo real de main
+    leerUsuario({ commit }) {
+      const user = localStorage.getItem('user-notas');
+      if (user) {
+        commit('setUsuario', user);
+        commit('setActivo', true);
+      } else {
+        commit('setUsuario', '');
+      }
+    },
   },
   // campos computados o getter
   getters: {
-    user: (state) => state.user,
     isActivo: (state) => state.activo,
     isAdmin: (state) => state.user.role === 'ADMIN',
   },

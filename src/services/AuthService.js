@@ -1,6 +1,5 @@
 import Service from './Service';
 
-const resource = 'auth';
 // Operaciones
 export default {
   // Realiza el Login
@@ -19,11 +18,8 @@ export default {
     return res.user;
   },
   // Realiza el logout
-  logout(token) {
-    const data = '';
-    const config = {
-      headers: { Authorization: `Bearer ${token}` },
-    };
-    return Service.post(`${resource}/logout`, data, config);
+  // https://firebase.google.com/docs/auth/web/password-auth?hl=es_419
+  async logout() {
+    return Service.auth.signOut();
   },
 };

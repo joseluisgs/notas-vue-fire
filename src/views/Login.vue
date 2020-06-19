@@ -51,10 +51,11 @@ export default {
     ...mapActions(['iniciarSesion']),
     async login() {
       try {
+        // const res = await AuthService.login(this.user);
         const res = await AuthService.login(this.user);
         // Lo hacemos de la manera manual, pero también lo podemos hacer mediante un evento (ver main)
-        this.iniciarSesion(res.user);
-        // this.$router.push({ name: 'Home' });
+        this.iniciarSesion(res.user); // No es necesario si nos suscribimos al evento en tiempo real de main
+        this.$router.replace({ name: 'Home' });
       } catch (error) {
         this.verAlerta(error, 'danger');
       }
