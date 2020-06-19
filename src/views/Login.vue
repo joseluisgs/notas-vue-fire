@@ -52,13 +52,11 @@ export default {
     async login() {
       try {
         const res = await AuthService.login(this.user);
-        // console.log(res.data.token);
-        this.guardarSesion(res.data.token);
-        this.$router.push({ name: 'Home' });
+        // Lo hacemos de la manera manual, pero también lo podemos hacer mediante un evento (ver main)
+        this.guardarSesion(res.user);
+        // this.$router.push({ name: 'Home' });
       } catch (error) {
-        if (error.response.data.mensaje) {
-          this.verAlerta(error.response.data.mensaje, 'danger');
-        }
+        this.verAlerta(error, 'danger');
       }
     },
     // Metodos de la alerta

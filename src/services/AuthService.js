@@ -4,8 +4,8 @@ const resource = 'auth';
 // Operaciones
 export default {
   // Realiza el Login
-  login(data) {
-    return data;
+  async login(data) {
+    return Service.auth.signInWithEmailAndPassword(data.email, data.password);
   },
   // Realiza el Registro
   async register(data) {
