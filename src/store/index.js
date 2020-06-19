@@ -8,6 +8,7 @@ export default new Vuex.Store({
   state: {
     user: '',
     activo: false,
+    admin: false,
   },
   // Modifica el estado, son los únicos métodos en hacerlo
   mutations: {
@@ -58,7 +59,7 @@ export default new Vuex.Store({
   // campos computados o getter
   getters: {
     isActivo: (state) => state.activo,
-    isAdmin: (state) => state.user.role === 'ADMIN',
+    isAdmin: () => false,
   },
   modules: {
   },

@@ -13,7 +13,6 @@ export default {
     const res = await Service.auth.createUserWithEmailAndPassword(data.email, data.password);
     res.user.updateProfile({
       displayName: data.username,
-      rol: 'USER',
     });
     return res.user;
   },
