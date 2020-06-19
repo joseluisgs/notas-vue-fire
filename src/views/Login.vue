@@ -48,12 +48,12 @@ export default {
   },
   methods: {
     // Incopramos los elementos de Vuex
-    ...mapActions(['guardarSesion']),
+    ...mapActions(['iniciarSesion']),
     async login() {
       try {
         const res = await AuthService.login(this.user);
         // Lo hacemos de la manera manual, pero también lo podemos hacer mediante un evento (ver main)
-        this.guardarSesion(res.user);
+        this.iniciarSesion(res.user);
         // this.$router.push({ name: 'Home' });
       } catch (error) {
         this.verAlerta(error, 'danger');

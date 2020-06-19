@@ -51,13 +51,13 @@ export default {
       conectado: this.isActivo(),
     };
   },
-  // Al crearme cargamos el token si existe
+  // Al crearme cargamos el usuario
   created() {
-    this.leerToken();
+    // this.leerUsuario();
   },
   methods: {
-    ...mapActions(['cerrarSesion', 'leerToken']),
-    ...mapGetters(['isActivo', 'isAdmin']),
+    ...mapActions(['cerrarSesion']),
+    ...mapGetters(['isActivo', 'isAdmin', 'user']),
     async salir() {
       // Por si hay que hacer algo en el servidor.
       try {

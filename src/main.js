@@ -15,6 +15,8 @@ import store from './store';
 // configuramos su css
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+// Vamos a manejar el stado de indentificación automaticamente con firebase con nuestro servicio
+import Service from './services/Service';
 
 // Install BootstrapVue
 Vue.use(BootstrapVue);
@@ -28,6 +30,13 @@ require('moment/locale/es');
 Vue.use(VueMoment, { moment });
 
 Vue.config.productionTip = false;
+
+// Esta función de firebase nos da en tiempo real estado del usuario
+// Es decir, nos dice en todo momento si esta identificado y ctivo (por ejemplo sus tokens)
+// https://firebase.google.com/docs/auth/web/manage-users?hl=es_419
+Service.auth.onAuthStateChanged((user) => {
+  store.dispatch('iniciarSesion', user);
+});
 
 new Vue({
   router,

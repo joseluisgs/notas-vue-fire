@@ -22,7 +22,7 @@ export default new Vuex.Store({
   actions: {
     // Guardamos los datos que necesitamos de la sesion, esto sería si lo hiciesmos asíncrono
     // Uso una acción y no una mutación porque no sabemos el tiempo que tarda en gaudar en storage
-    guardarSesion({ commit }, user) {
+    iniciarSesion({ commit }, user) {
       // cambiamos el estado si no es null
       commit('setActivo', user !== null);
       // Confirmamos el estado si tenemos usaurio
@@ -35,6 +35,7 @@ export default new Vuex.Store({
       }
     },
     // Cierra la sesion
+    // De esta manera no seria necesario hacer esto porque ya lo hace el evento en tiempo rela de main.JS
     cerrarSesion({ commit }) {
       // Ponemos todo a vacío
       commit('setActivo', false);
@@ -44,15 +45,15 @@ export default new Vuex.Store({
       // Volvemos a home
     },
     // Lee el usuario desde el almacenamiento
-    leerUsuario({ commit }) {
-      const user = localStorage.getItem('user-notas');
-      if (user) {
-        commit('setUsuario', user);
-        commit('setActivo', true);
-      } else {
-        commit('setUsuario', '');
-      }
-    },
+    // leerUsuario({ commit }) {
+    //   const user = localStorage.getItem('user-notas');
+    //   if (user) {
+    //     commit('setUsuario', user);
+    //     commit('setActivo', true);
+    //   } else {
+    //     commit('setUsuario', '');
+    //   }
+    // },
   },
   // campos computados o getter
   getters: {
