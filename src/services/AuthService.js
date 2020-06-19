@@ -4,7 +4,7 @@ import Service from './Service';
 export default {
   // Realiza el Login
   // https://firebase.google.com/docs/auth/web/password-auth?hl=es_419
-  async login(data) {
+  login(data) {
     return Service.auth.signInWithEmailAndPassword(data.email, data.password);
   },
   // Realiza el Registro
@@ -18,7 +18,13 @@ export default {
   },
   // Realiza el logout
   // https://firebase.google.com/docs/auth/web/password-auth?hl=es_419
-  async logout() {
+  logout() {
     return Service.auth.signOut();
+  },
+  // Realiza el login con Google
+  // https://firebase.google.com/docs/auth/web/google-signin?hl=es_419
+  loginGoogle() {
+    // provider.addScope('https://www.googleapis.com/auth/plus.login');
+    return Service.auth.signInWithPopup(Service.providerGoogle);
   },
 };

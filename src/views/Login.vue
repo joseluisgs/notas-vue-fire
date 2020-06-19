@@ -30,7 +30,7 @@
     <div>
       <hr>
       <h4>o identificate con tu cuenta de:</h4>
-      <b-button variant="outline-danger" @click="loginGoogle">Google</b-button>
+      <b-button variant="outline-danger mx-2" @click="loginGoogle">Google</b-button>
     </div>
   </div>
 </template>
@@ -66,8 +66,14 @@ export default {
       }
     },
     // Login con google
-    loginGoogle() {
-      console.log('login google');
+    async loginGoogle() {
+      try {
+        const res = await AuthService.loginGoogle();
+        this.iniciarSesion(res.user); // No es necesario si nos suscribimos al evento en tiempo real de main
+        this.$router.replace({ name: 'Home' });
+      } catch (error) {
+        this.verAlerta(error, 'danger');
+      }
     },
     // Metodos de la alerta
     verAlerta(texto, color) {
