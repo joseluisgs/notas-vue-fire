@@ -1,17 +1,20 @@
 import Service from './Service';
 
-// Recurso a consumir
 const resource = 'auth';
-
 // Operaciones
 export default {
   // Realiza el Login
   login(data) {
-    return Service.post(`${resource}/login`, data);
+    return data;
   },
   // Realiza el Registro
-  register(data) {
-    return Service.post(`${resource}/register`, data);
+  async register(data) {
+    const res = await Service.auth.createUserWithEmailAndPassword(data.email, data.password);
+    res.user.updateProfile({
+      displayName: data.username,
+      rol: 'USER',
+    });
+    return res.user;
   },
   // Realiza el logout
   logout(token) {

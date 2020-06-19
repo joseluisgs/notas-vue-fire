@@ -60,7 +60,7 @@ export default {
         this.verAlerta('Usuario registrado', 'success');
         this.$router.push({ name: 'Login' });
       } catch (error) {
-        this.verAlerta(error.response.data.mensaje, 'danger');
+        this.verAlerta(error, 'danger');
       }
     },
     // Metodos de la alerta
