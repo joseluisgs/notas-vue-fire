@@ -6,11 +6,21 @@ const resource = 'notas';
 // Operaciones
 export default {
   // Devuleve todo
-  get(token) {
-    const config = {
-      headers: { Authorization: `Bearer ${token}` },
-    };
-    return Service.get(resource, config);
+  // https://firebase.google.com/docs/firestore/query-data/get-data?hl=es-419
+  async get(filter, value) {
+    const docs = await Service.db.collection(resource).where(filter, '==', value).get();
+    const notas = [];
+    docs.forEach((doc) => {
+      // Mapeamos los campos, lo hago porque me interesa meter el id dentro.
+      notas.push({
+        id: doc.id,
+        titulo: doc.data().titulo,
+        descripcion: doc.data().descripcion,
+        fecha: doc.data().fecha,
+        fichero: doc.data().fichero,
+      });
+    });
+    return notas;
   },
   // Devuelve por id
   getById(id, token) {

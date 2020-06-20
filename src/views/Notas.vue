@@ -65,7 +65,7 @@
         <!-- <div class="mt-3">Nueva imagen seleccionada: {{ fichero ? fichero.name : '' }}</div> -->
         </b-form-group>
         <b-form-group id="input-img">
-          <b-img :src="nota.fichero.url" rounded alt="Rounded image" width="100" v-if="nota.fichero.url"></b-img>
+          <b-img :src="nota.fichero.url" rounded alt="Rounded image" width="100" v-if="nota.fichero!==null"></b-img>
         </b-form-group>
         <b-form-group id="input-botones">
           <b-button type="submit" variant="warning mx-2">Modificar</b-button>
@@ -131,14 +131,14 @@
       <template v-slot:cell(titulo)="row">{{row.item.titulo}}</template>
       <template v-slot:cell(descripcion)="row">{{row.item.descripcion}}</template>
       <template v-slot:cell(imagen)="row">
-        <b-avatar variant="info" :src="row.item.fichero.url ? row.item.fichero.url : ''"></b-avatar>
+        <b-avatar variant="info" :src="row.item.fichero? row.item.fichero.url : ''"></b-avatar>
       </template>
       <template v-slot:cell(fecha)="row">{{row.item.fecha | moment("DD/MM/YYYY, HH:mm")}}</template>
       <template v-slot:cell(acciones)="row">
-        <b-button variant="primary" class="btn-sm mx-1 my-1" @click="verNota(row.item._id)" v-b-tooltip.hover title="Ver nota">
+        <b-button variant="primary" class="btn-sm mx-1 my-1" @click="verNota(row.item.id)" v-b-tooltip.hover title="Ver nota">
           <b-icon icon="card-text" aria-hidden="true"></b-icon>
         </b-button>
-        <b-button variant="warning" class="btn-sm mx-1 my-1" @click="activarEdicion(row.item._id)" v-b-tooltip.hover title="Editar nota">
+        <b-button variant="warning" class="btn-sm mx-1 my-1" @click="activarEdicion(row.item.id)" v-b-tooltip.hover title="Editar nota">
           <b-icon icon="pencil-square" aria-hidden="true"></b-icon>
         </b-button>
         <b-button variant="danger" class="btn-sm mx-1 my-1" @click="mostrarMensaje(row.item)" v-b-tooltip.hover title="Eliminar nota">
@@ -261,6 +261,8 @@ export default {
         // }
         // Subimos la nota
         this.nota.user = this.user.email;
+        this.nota.fecha = Date.now();
+        this.nota.fichero = null;
         const nota = await NotasService.post(this.nota);
         this.notas.unshift(nota.data);
         this.verAlerta('¡Nota agregada!', 'success');
@@ -302,8 +304,8 @@ export default {
       this.isCargando = true;
       // Consultamos todas las notas
       try {
-        const res = await NotasService.get(this.token);
-        this.notas = res.data;
+        this.notas = await NotasService.get('user', this.user.email);
+        console.log(this.notas);
       } catch (error) {
         // Alerta de mensaje
         this.verAlerta(`No se ha cargar las notas: ${error.response.data.mensaje}`, 'danger');
