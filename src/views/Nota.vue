@@ -17,7 +17,7 @@
     </b-card-text>
     <b-list-group flush>
       <b-list-group-item></b-list-group-item>
-      <b-list-group-item>Autor: {{user.username}}</b-list-group-item>
+      <b-list-group-item>Autor: {{user.email}}</b-list-group-item>
       <b-list-group-item></b-list-group-item>
     </b-list-group>
     <b-button to="/notas" variant="outline-primary">Volver</b-button>
@@ -42,8 +42,7 @@ export default {
   },
   async created() {
     try {
-      const item = await NotasService.getById(this.$route.params.id, this.token);
-      this.nota = item.data;
+      this.nota = await NotasService.getById(this.$route.params.id);
     } catch (error) {
       this.$router.push({ name: 'Error404' });
     }

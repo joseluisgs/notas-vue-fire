@@ -305,7 +305,7 @@ export default {
       // Consultamos todas las notas
       try {
         this.notas = await NotasService.get('user', this.user.email);
-        console.log(this.notas);
+        // console.log(this.notas);
       } catch (error) {
         // Alerta de mensaje
         this.verAlerta(`No se ha cargar las notas: ${error.response.data.mensaje}`, 'danger');
@@ -316,6 +316,7 @@ export default {
     // Muestra una nota
     verNota(id) {
       // Una forma router.push({ path: `/notas/${id}` }) // -> /notas/123
+      console.log(id);
       this.$router.push({ name: 'Nota', params: { id: `${id}` } });
     },
     // Metodos de la alerta

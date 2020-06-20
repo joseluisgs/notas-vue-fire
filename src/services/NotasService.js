@@ -23,12 +23,16 @@ export default {
     return notas;
   },
   // Devuelve por id
-  getById(id, token) {
-    const config = {
-      headers: { Authorization: `Bearer ${token}` },
+  async getById(id) {
+    const doc = await Service.db.collection(resource).doc(id).get();
+    const nota = {
+      id,
+      titulo: doc.data().titulo,
+      descripcion: doc.data().descripcion,
+      fecha: doc.data().fecha,
+      fichero: doc.data().fichero,
     };
-    return Service.get(`${resource}/${id}`, config);
-    // return Service.get(resource, id);
+    return nota;
   },
   // Crea uno nuevo
   // https://firebase.google.com/docs/firestore/manage-data/add-data?hl=es-419#web
