@@ -36,15 +36,22 @@ export default {
   },
   // Crea uno nuevo
   // https://firebase.google.com/docs/firestore/manage-data/add-data?hl=es-419#web
-  post(data) {
-    return Service.db.collection(resource).add(data);
+  async post(data) {
+    let doc = await Service.db.collection(resource).add(data); // inserto, me devuleve el id
+    doc = await Service.db.collection(resource).doc(doc.id).get(); // Recupero para devolverlo
+    const nota = {
+      id: doc.id,
+      titulo: doc.data().titulo,
+      descripcion: doc.data().descripcion,
+      fecha: doc.data().fecha,
+      fichero: doc.data().fichero,
+    };
+    return nota;
   },
   // Actualiza con put
-  put(id, data, token) {
-    const config = {
-      headers: { Authorization: `Bearer ${token}` },
-    };
-    return Service.put(`${resource}/${id}`, data, config);
+  // https://firebase.google.com/docs/firestore/manage-data/add-data?hl=es-419#update-data
+  put(id, data) {
+    return Service.db.collection(resource).doc(id).set(data);
   },
   // Actualizo con patch
   patch(id, data, token) {

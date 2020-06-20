@@ -65,7 +65,7 @@
         <!-- <div class="mt-3">Nueva imagen seleccionada: {{ fichero ? fichero.name : '' }}</div> -->
         </b-form-group>
         <b-form-group id="input-img">
-          <b-img :src="nota.fichero.url" rounded alt="Rounded image" width="100" v-if="nota.fichero!==null"></b-img>
+          <b-img :src="nota.fichero.url" rounded alt="Rounded image" width="100" v-if="nota.fichero"></b-img>
         </b-form-group>
         <b-form-group id="input-botones">
           <b-button type="submit" variant="warning mx-2">Modificar</b-button>
@@ -230,14 +230,14 @@ export default {
     activarEdicion(id) {
       this.formEditar = true;
       // copiamos el objeto, no lo asignamos directamente con el igual {...} para evitar problemas de reactividad
-      this.nota = { ...this.notas.find((n) => n._id === id) };
+      this.nota = { ...this.notas.find((n) => n.id === id) };
     },
     // elimina una nota
     async eliminarNota(id) {
       try {
         const res = await NotasService.delete(id, this.token);
         // Elimino del array
-        const index = this.notas.findIndex((item) => item._id === res.data._id);
+        const index = this.notas.findIndex((item) => item.id === res.id);
         const delNota = this.notas[index];
         this.notas.splice(index, 1);
         // Borramos la imagen
@@ -247,7 +247,7 @@ export default {
         // Alerta de mensaje
         this.verAlerta('¡Nota eliminada!', 'danger');
       } catch (error) {
-        this.verAlerta(`No se ha podido eliminar la nota ${error.response.data.mensaje}`, 'danger');
+        this.verAlerta(`No se ha podido eliminar la nota ${error}`, 'danger');
       }
     },
     // agrega una nueva nota
@@ -264,10 +264,10 @@ export default {
         this.nota.fecha = Date.now();
         this.nota.fichero = null;
         const nota = await NotasService.post(this.nota);
-        this.notas.unshift(nota.data);
+        this.notas.unshift(nota);
         this.verAlerta('¡Nota agregada!', 'success');
       } catch (error) {
-        this.verAlerta(`No se puede insertar la nota completa: ${error.response.data.mensaje}`, 'danger');
+        this.verAlerta(`No se puede insertar la nota completa: ${error}`, 'danger');
       } finally {
         this.formAgregar = false;
         this.nota = {};
@@ -288,12 +288,13 @@ export default {
           this.nota.fichero = img.data;
         }
         // Actualizamos la nota
-        await NotasService.put(this.nota._id, this.nota, this.token);
+        this.nota.user = this.user.email;
+        await NotasService.put(this.nota.id, this.nota);
         this.verAlerta('¡Nota modificada!', 'success');
         // recargamos la tabla o actualizamos tod el vector a mano (asís e ven mejor los cambios)
         this.cargarNotas();
       } catch (error) {
-        this.verAlerta(`No se ha podido modificar la nota: ${error.response.data.mensaje}`, 'danger');
+        this.verAlerta(`No se ha podido modificar la nota: ${error}`, 'danger');
       } finally {
         this.nota = {};
         this.formEditar = false;
@@ -308,7 +309,7 @@ export default {
         // console.log(this.notas);
       } catch (error) {
         // Alerta de mensaje
-        this.verAlerta(`No se ha cargar las notas: ${error.response.data.mensaje}`, 'danger');
+        this.verAlerta(`No se ha cargar las notas: ${error}`, 'danger');
       } finally {
         this.isCargando = false;
       }
@@ -316,7 +317,6 @@ export default {
     // Muestra una nota
     verNota(id) {
       // Una forma router.push({ path: `/notas/${id}` }) // -> /notas/123
-      console.log(id);
       this.$router.push({ name: 'Nota', params: { id: `${id}` } });
     },
     // Metodos de la alerta
@@ -356,7 +356,7 @@ export default {
         .then((value) => {
           if (value) {
             // eslint-disable-next-line no-underscore-dangle
-            this.eliminarNota(item._id);
+            this.eliminarNota(item.id);
           }
         });
     },
