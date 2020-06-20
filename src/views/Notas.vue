@@ -235,15 +235,15 @@ export default {
     // elimina una nota
     async eliminarNota(id) {
       try {
-        const res = await NotasService.delete(id, this.token);
+        await NotasService.delete(id);
         // Elimino del array
-        const index = this.notas.findIndex((item) => item.id === res.id);
-        const delNota = this.notas[index];
+        const index = this.notas.findIndex((item) => item.id === id);
+        // const delNota = this.notas[index];
         this.notas.splice(index, 1);
         // Borramos la imagen
-        if (delNota.fichero.id) {
-          await FilesService.delete(delNota.fichero.id, this.token);
-        }
+        // if (delNota.fichero.id) {
+        //   await FilesService.delete(delNota.fichero.id, this.token);
+        // }
         // Alerta de mensaje
         this.verAlerta('¡Nota eliminada!', 'danger');
       } catch (error) {

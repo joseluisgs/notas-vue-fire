@@ -61,11 +61,9 @@ export default {
     return Service.patch(`${resource}/${id}`, data, config);
   },
   // Elimina
-  delete(id, token) {
-    const config = {
-      headers: { Authorization: `Bearer ${token}` },
-    };
-    return Service.delete(`${resource}/${id}`, config);
+  // https://firebase.google.com/docs/firestore/manage-data/delete-data?hl=es-419
+  delete(id) {
+    return Service.db.collection(resource).doc(id).delete();
   },
 };
 
