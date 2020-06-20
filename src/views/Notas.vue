@@ -213,7 +213,7 @@ export default {
   },
   // campos computados
   computed: {
-    ...mapState(['token']),
+    ...mapState(['user']),
     // Para manear el filtro, en vez de psar la lista de notas pasa esto y te ahorras el filtro, pero ya que lo hace él lo dejaré el suyo
     // filtroNotas() {
     //   return this.notas.filter((nota) => nota.titulo.toLowerCase().includes(this.busqueda.toLowerCase()) || nota.descripcion.toLowerCase().includes(this.busqueda.toLowerCase()));
@@ -255,12 +255,13 @@ export default {
       // Si hay fichero lo subimos
       try {
         // Subimos la imagen si hay
-        if (this.fichero.name) {
-          const img = await FilesService.post(this.fichero, this.token);
-          this.nota.fichero = img.data;
-        }
+        // if (this.fichero.name) {
+        //   const img = await FilesService.post(this.fichero, this.token);
+        //   this.nota.fichero = img.data;
+        // }
         // Subimos la nota
-        const nota = await NotasService.post(this.nota, this.token);
+        this.nota.user = this.user.email;
+        const nota = await NotasService.post(this.nota);
         this.notas.unshift(nota.data);
         this.verAlerta('¡Nota agregada!', 'success');
       } catch (error) {

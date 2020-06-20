@@ -21,11 +21,9 @@ export default {
     // return Service.get(resource, id);
   },
   // Crea uno nuevo
-  post(data, token) {
-    const config = {
-      headers: { Authorization: `Bearer ${token}` },
-    };
-    return Service.post(resource, data, config);
+  // https://firebase.google.com/docs/firestore/manage-data/add-data?hl=es-419#web
+  post(data) {
+    return Service.db.collection(resource).add(data);
   },
   // Actualiza con put
   put(id, data, token) {
