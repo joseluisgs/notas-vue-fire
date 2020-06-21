@@ -23,7 +23,11 @@ const db = firebase.firestore(); // Base de datos en tiempo real
 const auth = firebase.auth(); // Autenticación
 const storage = firebase.storage(); // Almacenamiento
 const { currentUser } = auth;
+// Autenticación de Google, poner uno por método de identificación. Se deb eactivar en la consola de Firebase
+const providerGoogle = new firebase.auth.GoogleAuthProvider();
 
+
+// imprimimos el nombre del proyecto, esto espor depurar, luego quitar
 console.log(defaultProject.name); // "[DEFAULT]"console.log(defaultProject.name);  // "[DEFAULT]"
 
 // Aquí si quremos podriamos exportar las colecciones
@@ -39,6 +43,7 @@ export default {
   auth,
   storage,
   currentUser,
+  providerGoogle,
   // usersCollection,
   // postsCollection,
   // commentsCollection,

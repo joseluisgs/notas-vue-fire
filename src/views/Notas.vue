@@ -65,7 +65,7 @@
         <!-- <div class="mt-3">Nueva imagen seleccionada: {{ fichero ? fichero.name : '' }}</div> -->
         </b-form-group>
         <b-form-group id="input-img">
-          <b-img :src="nota.fichero.url" rounded alt="Rounded image" width="100" v-if="nota.fichero.url"></b-img>
+          <b-img :src="nota.fichero.url" rounded alt="Rounded image" width="100" v-if="nota.fichero"></b-img>
         </b-form-group>
         <b-form-group id="input-botones">
           <b-button type="submit" variant="warning mx-2">Modificar</b-button>
@@ -131,14 +131,14 @@
       <template v-slot:cell(titulo)="row">{{row.item.titulo}}</template>
       <template v-slot:cell(descripcion)="row">{{row.item.descripcion}}</template>
       <template v-slot:cell(imagen)="row">
-        <b-avatar variant="info" :src="row.item.fichero.url ? row.item.fichero.url : ''"></b-avatar>
+        <b-avatar variant="info" :src="row.item.fichero? row.item.fichero.url : ''"></b-avatar>
       </template>
       <template v-slot:cell(fecha)="row">{{row.item.fecha | moment("DD/MM/YYYY, HH:mm")}}</template>
       <template v-slot:cell(acciones)="row">
-        <b-button variant="primary" class="btn-sm mx-1 my-1" @click="verNota(row.item._id)" v-b-tooltip.hover title="Ver nota">
+        <b-button variant="primary" class="btn-sm mx-1 my-1" @click="verNota(row.item.id)" v-b-tooltip.hover title="Ver nota">
           <b-icon icon="card-text" aria-hidden="true"></b-icon>
         </b-button>
-        <b-button variant="warning" class="btn-sm mx-1 my-1" @click="activarEdicion(row.item._id)" v-b-tooltip.hover title="Editar nota">
+        <b-button variant="warning" class="btn-sm mx-1 my-1" @click="activarEdicion(row.item.id)" v-b-tooltip.hover title="Editar nota">
           <b-icon icon="pencil-square" aria-hidden="true"></b-icon>
         </b-button>
         <b-button variant="danger" class="btn-sm mx-1 my-1" @click="mostrarMensaje(row.item)" v-b-tooltip.hover title="Eliminar nota">
@@ -210,10 +210,30 @@ export default {
   created() {
     // cargamos las notas
     this.cargarNotas();
+    // se puede uno ssucribir en tiempo real a los cambos, no lo he hecho pero el ejemlop es igual alogin que hicimos en main.js
+    // Lo actualiza de manera reactiva
+    // no lo he hecho así para no meter el cósigo de firebase totalemnet y seguir usando mi codigo de sevricio y no tocar las llamadas
+    // de este cliente, pero es una opción interesante que ya probé en otros tutoriales que he hecho
+    // https://firebase.google.com/docs/firestore/query-data/listen?hl=es-419
+    // ordenar y filltrar https://firebase.google.com/docs/firestore/query-data/order-limit-data?hl=es
+    // db.collection("notas")
+    // .onSnapshot((docs) => {
+    //     let documentos = [];
+    //     docs.forEach((doc) => {
+    //         documentos.push({
+    //             id: doc.id,
+    //             titulo: doc.data().titulo,
+    //             descripcion: doc.data().descripcion,
+    //             fecha: doc.data().fecha,
+    //             fichero: doc.data().fichero,
+    //         });
+    //     });
+    //     this.notas = documentos;
+    // });
   },
   // campos computados
   computed: {
-    ...mapState(['token']),
+    ...mapState(['user']),
     // Para manear el filtro, en vez de psar la lista de notas pasa esto y te ahorras el filtro, pero ya que lo hace él lo dejaré el suyo
     // filtroNotas() {
     //   return this.notas.filter((nota) => nota.titulo.toLowerCase().includes(this.busqueda.toLowerCase()) || nota.descripcion.toLowerCase().includes(this.busqueda.toLowerCase()));
@@ -230,41 +250,48 @@ export default {
     activarEdicion(id) {
       this.formEditar = true;
       // copiamos el objeto, no lo asignamos directamente con el igual {...} para evitar problemas de reactividad
-      this.nota = { ...this.notas.find((n) => n._id === id) };
+      this.nota = { ...this.notas.find((n) => n.id === id) };
     },
     // elimina una nota
     async eliminarNota(id) {
       try {
-        const res = await NotasService.delete(id, this.token);
+        await NotasService.delete(id);
         // Elimino del array
-        const index = this.notas.findIndex((item) => item._id === res.data._id);
+        const index = this.notas.findIndex((item) => item.id === id);
         const delNota = this.notas[index];
         this.notas.splice(index, 1);
         // Borramos la imagen
-        if (delNota.fichero.id) {
-          await FilesService.delete(delNota.fichero.id, this.token);
+        if (delNota.fichero) {
+          await FilesService.delete(delNota.fichero.id);
         }
         // Alerta de mensaje
         this.verAlerta('¡Nota eliminada!', 'danger');
       } catch (error) {
-        this.verAlerta(`No se ha podido eliminar la nota ${error.response.data.mensaje}`, 'danger');
+        this.verAlerta(`No se ha podido eliminar la nota ${error}`, 'danger');
       }
     },
     // agrega una nueva nota
     async agregarNota() {
       // Si hay fichero lo subimos
+      this.nota.fichero = null;
       try {
         // Subimos la imagen si hay
         if (this.fichero.name) {
-          const img = await FilesService.post(this.fichero, this.token);
-          this.nota.fichero = img.data;
+          const img = await FilesService.post(this.fichero);
+          this.nota.fichero = img;
+          // Podriamos jugar a ver ele stado de la subida en tiempo real si en vez de llamar al servicio lo hiiesemos así
+          // https://www.genuitec.com/upload-files-using-vue-and-firebase/
+          // De la misma manera que anteriormente no lo he hecho por usar el mismo código que ya tenía
         }
         // Subimos la nota
-        const nota = await NotasService.post(this.nota, this.token);
-        this.notas.unshift(nota.data);
+        this.nota.user = this.user.email;
+        this.nota.fecha = Date.now();
+        const nota = await NotasService.post(this.nota);
+        this.notas.unshift(nota);
         this.verAlerta('¡Nota agregada!', 'success');
       } catch (error) {
-        this.verAlerta(`No se puede insertar la nota completa: ${error.response.data.mensaje}`, 'danger');
+        console.log(error);
+        this.verAlerta(`No se puede insertar la nota completa: ${error}`, 'danger');
       } finally {
         this.formAgregar = false;
         this.nota = {};
@@ -276,21 +303,22 @@ export default {
       try {
         // Primero si hay fichero nuevo lo subimos
         if (this.fichero.name) {
-          const img = await FilesService.post(this.fichero, this.token);
+          const img = await FilesService.post(this.fichero);
           // si tenemos una imagen antigua la borramos
-          if (this.nota.fichero.name) {
-            await FilesService.delete(this.nota.fichero.id, this.token);
+          if (this.nota.fichero) {
+            await FilesService.delete(this.nota.fichero.id);
           }
           // copiamos los datos del nuevo fichero en la nota
-          this.nota.fichero = img.data;
+          this.nota.fichero = img;
         }
         // Actualizamos la nota
-        await NotasService.put(this.nota._id, this.nota, this.token);
+        this.nota.user = this.user.email;
+        await NotasService.put(this.nota.id, this.nota);
         this.verAlerta('¡Nota modificada!', 'success');
         // recargamos la tabla o actualizamos tod el vector a mano (asís e ven mejor los cambios)
         this.cargarNotas();
       } catch (error) {
-        this.verAlerta(`No se ha podido modificar la nota: ${error.response.data.mensaje}`, 'danger');
+        this.verAlerta(`No se ha podido modificar la nota: ${error}`, 'danger');
       } finally {
         this.nota = {};
         this.formEditar = false;
@@ -301,11 +329,11 @@ export default {
       this.isCargando = true;
       // Consultamos todas las notas
       try {
-        const res = await NotasService.get(this.token);
-        this.notas = res.data;
+        this.notas = await NotasService.get('user', this.user.email);
+        // console.log(this.notas);
       } catch (error) {
         // Alerta de mensaje
-        this.verAlerta(`No se ha cargar las notas: ${error.response.data.mensaje}`, 'danger');
+        this.verAlerta(`No se ha cargar las notas: ${error}`, 'danger');
       } finally {
         this.isCargando = false;
       }
@@ -352,7 +380,7 @@ export default {
         .then((value) => {
           if (value) {
             // eslint-disable-next-line no-underscore-dangle
-            this.eliminarNota(item._id);
+            this.eliminarNota(item.id);
           }
         });
     },

@@ -25,8 +25,13 @@
         placeholder="password"
         v-model="user.password"
       />
-      <b-button variant="primary" type="submit">Acceder</b-button>
+      <b-button variant="primary mx-2" type="submit">Acceder</b-button>
     </form>
+    <div>
+      <hr>
+      <h4>o identificate con tu cuenta de:</h4>
+      <b-button variant="outline-danger mx-2" @click="loginGoogle">Google</b-button>
+    </div>
   </div>
 </template>
 
@@ -48,17 +53,26 @@ export default {
   },
   methods: {
     // Incopramos los elementos de Vuex
-    ...mapActions(['guardarSesion']),
+    ...mapActions(['iniciarSesion']),
     async login() {
       try {
+        // const res = await AuthService.login(this.user);
         const res = await AuthService.login(this.user);
-        // console.log(res.data.token);
-        this.guardarSesion(res.data.token);
-        this.$router.push({ name: 'Home' });
+        // Lo hacemos de la manera manual, pero también lo podemos hacer mediante un evento (ver main)
+        this.iniciarSesion(res.user); // No es necesario si nos suscribimos al evento en tiempo real de main
+        this.$router.replace({ name: 'Home' });
       } catch (error) {
-        if (error.response.data.mensaje) {
-          this.verAlerta(error.response.data.mensaje, 'danger');
-        }
+        this.verAlerta(error, 'danger');
+      }
+    },
+    // Login con google
+    async loginGoogle() {
+      try {
+        const res = await AuthService.loginGoogle();
+        this.iniciarSesion(res.user); // No es necesario si nos suscribimos al evento en tiempo real de main
+        this.$router.replace({ name: 'Home' });
+      } catch (error) {
+        this.verAlerta(error, 'danger');
       }
     },
     // Metodos de la alerta

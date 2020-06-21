@@ -24,7 +24,7 @@
                 <b-icon icon="person"></b-icon>Usuario
               </template>
               <template v-slot:button-content v-else>
-                <b-icon icon="person-fill"></b-icon>{{user.username}}
+                <b-icon icon="person-fill"></b-icon>{{user.displayName}}
               </template>
               <template v-if="!isActivo()">
                 <b-dropdown-item to="/login"><b-icon icon="box-arrow-in-right"></b-icon> Entrar</b-dropdown-item>
@@ -51,25 +51,26 @@ export default {
       conectado: this.isActivo(),
     };
   },
-  // Al crearme cargamos el token si existe
-  created() {
-    this.leerToken();
-  },
+  // Al crearme cargamos el usuario
+  // created() {
+  //     username = this.leerUsuario();
+  // },
   methods: {
-    ...mapActions(['cerrarSesion', 'leerToken']),
+    ...mapActions(['cerrarSesion']),
     ...mapGetters(['isActivo', 'isAdmin']),
     async salir() {
       // Por si hay que hacer algo en el servidor.
       try {
-        await AuthService.logout(this.token);
+        await AuthService.logout();
+        // No es necesario si nos suscribimos a los eventos en tiempo real de main, pero lo hago para que se vea
         this.cerrarSesion();
-        this.$router.push({ name: 'Login' });
+        this.$router.replace({ name: 'Login' });
       } catch (error) {
-        console.log(error.response.data.mensaje);
-        this.$router.push({ name: 'Login' });
+        console.log(error);
+        this.$router.replace({ name: 'Login' });
       }
     },
   },
-  computed: mapState(['token', 'user']),
+  computed: mapState(['user']),
 };
 </script>

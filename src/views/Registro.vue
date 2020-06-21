@@ -58,9 +58,10 @@ export default {
       try {
         await AuthService.register(this.user);
         this.verAlerta('Usuario registrado', 'success');
-        this.$router.push({ name: 'Login' });
+        // this.$router.replace({ name: 'Login' }); Con el evento en tiempo real lo podemos llevar a home por que se identifica
+        this.$router.replace({ name: 'Home' });
       } catch (error) {
-        this.verAlerta(error.response.data.mensaje, 'danger');
+        this.verAlerta(error, 'danger');
       }
     },
     // Metodos de la alerta
