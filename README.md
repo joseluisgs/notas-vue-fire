@@ -42,7 +42,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 * [GitHub](https://github.com/joseluisgs) ![GitHub](https://img.shields.io/github/followers/joseluisgs?style=social)
 
-![GitHub](https://img.shields.io/github/last-commit/joseluisgs/notas-vue-nem)
+![GitHub](https://img.shields.io/github/last-commit/joseluisgs/notas-vue-fire)
 
 ## Licencia
 Este proyecto esta licenciado bajo licencia __MIT__, si desea saber más, visite el fichero [LICENSE](https://github.com/joseluisgs/notas-vue-fire/blob/master/LICENSE) para su uso docente y educativo.
