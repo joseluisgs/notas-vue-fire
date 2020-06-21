@@ -4,18 +4,21 @@ import firebase from 'firebase/app'; // mejor que poner import firebase from 'fi
 import 'firebase/firestore';
 import 'firebase/auth';
 import 'firebase/storage';
+import FirebaseConfig from './FirebaseConfig';
 
-// Configuramos Firebase
-const firebaseConfig = {
-  apiKey: process.env.VUE_APP_FIRE_API_KEY,
-  authDomain: process.env.VUE_APP_FIRE_AUTH_DOMAIN,
-  databaseURL: process.env.VUE_APP_FIRE_DATABASE_URL,
-  projectId: `${process.env.VUE_APP_FIRE_PROJECT_ID}`,
-  storageBucket: process.env.VUE_APP_FIRE_STORAGE_BUCKET,
-  messagingSenderId: process.env.VUE_APP_FIRE_MESSAGING_SENDER_ID,
-  appId: process.env.VUE_APP_FIRE_APP_ID,
-};
-console.log(process.env.VUE_APP_FIRE_API_KEY);
+// Configuramos Firebase desde env
+// const firebaseConfig = {
+//   apiKey: process.env.VUE_APP_FIRE_API_KEY,
+//   authDomain: process.env.VUE_APP_FIRE_AUTH_DOMAIN,
+//   databaseURL: process.env.VUE_APP_FIRE_DATABASE_URL,
+//   projectId: `${process.env.VUE_APP_FIRE_PROJECT_ID}`,
+//   storageBucket: process.env.VUE_APP_FIRE_STORAGE_BUCKET,
+//   messagingSenderId: process.env.VUE_APP_FIRE_MESSAGING_SENDER_ID,
+//   appId: process.env.VUE_APP_FIRE_APP_ID,
+// };
+// Configuramos firebase desde nuestro fichero de FirebaseConfig.js
+const firebaseConfig = FirebaseConfig;
+
 // Inicializar Firebase
 const defaultProject = firebase.initializeApp(firebaseConfig);
 
@@ -45,21 +48,4 @@ export default {
   storage,
   currentUser,
   providerGoogle,
-  // usersCollection,
-  // postsCollection,
-  // commentsCollection,
-  // likesCollection,
 };
-
-// Creamos una colección si no exiuste e insertamos un documento, con la clave, es set
-// db.collection('cities').doc('LA').set({
-//   name: 'Los Angeles',
-//   state: 'CA',
-//   country: 'USA',
-// })
-//   .then(() => {
-//     console.log('Document successfully written!');
-//   })
-//   .catch((error) => {
-//     console.error('Error writing document: ', error);
-//   });

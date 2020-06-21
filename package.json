@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --production",
     "lint": "vue-cli-service lint",
     "clean": "rm -rf node_modules && npm run undist",
     "reinstall": "npm run clean && npm run undist && npm install",
