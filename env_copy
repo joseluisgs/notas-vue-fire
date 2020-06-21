@@ -1,0 +1,11 @@
+# Configuración de firebase si lo quieresponer oculto
+# renombra este fichero como .env y a la hora de desplegar usalo en tu servidor como variables de entorno
+# si no puedes usar como dice la doucmentación, yo solo he mapeado los datos
+# https://firebase.google.com/docs/web/setup?hl=es
+VUE_APP_FIRE_API_KEY="una_key"
+VUE_APP_FIRE_AUTH_DOMAIN="mi_app.firebaseapp.com"
+VUE_APP_FIRE_DATABASE_URL="https://mi_app.firebaseio.com"
+VUE_APP_FIRE_PROJECT_ID="mi_app"
+VUE_APP_FIRE_STORAGE_BUCKET="mi_app.appspot.com"
+VUE_APP_FIRE_MESSAGING_SENDER_ID="123456789"
+VUE_APP_FIRE_APP_ID="1:123456789:web:123456789ffff"
