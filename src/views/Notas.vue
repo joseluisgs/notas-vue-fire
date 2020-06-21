@@ -255,18 +255,18 @@ export default {
       // Si hay fichero lo subimos
       try {
         // Subimos la imagen si hay
-        // if (this.fichero.name) {
-        //   const img = await FilesService.post(this.fichero, this.token);
-        //   this.nota.fichero = img.data;
-        // }
+        if (this.fichero.name) {
+          const img = await FilesService.post(this.fichero);
+          this.nota.fichero = img;
+        }
         // Subimos la nota
         this.nota.user = this.user.email;
         this.nota.fecha = Date.now();
-        this.nota.fichero = null;
         const nota = await NotasService.post(this.nota);
         this.notas.unshift(nota);
         this.verAlerta('¡Nota agregada!', 'success');
       } catch (error) {
+        console.log(error);
         this.verAlerta(`No se puede insertar la nota completa: ${error}`, 'danger');
       } finally {
         this.formAgregar = false;

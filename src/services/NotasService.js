@@ -2,13 +2,14 @@ import Service from './Service';
 
 // Recurso a consumir
 const resource = 'notas';
+const DBNotas = Service.db.collection(resource);
 
 // Operaciones
 export default {
   // Devuleve todo
   // https://firebase.google.com/docs/firestore/query-data/get-data?hl=es-419
   async get(filter, value) {
-    const docs = await Service.db.collection(resource).where(filter, '==', value).get();
+    const docs = await DBNotas.where(filter, '==', value).get();
     const notas = [];
     docs.forEach((doc) => {
       // Mapeamos los campos, lo hago porque me interesa meter el id dentro.
@@ -24,7 +25,7 @@ export default {
   },
   // Devuelve por id
   async getById(id) {
-    const doc = await Service.db.collection(resource).doc(id).get();
+    const doc = await DBNotas.doc(id).get();
     const nota = {
       id,
       titulo: doc.data().titulo,
@@ -37,8 +38,8 @@ export default {
   // Crea uno nuevo
   // https://firebase.google.com/docs/firestore/manage-data/add-data?hl=es-419#web
   async post(data) {
-    let doc = await Service.db.collection(resource).add(data); // inserto, me devuleve el id
-    doc = await Service.db.collection(resource).doc(doc.id).get(); // Recupero para devolverlo
+    let doc = await DBNotas.add(data); // inserto, me devuleve el id
+    doc = await DBNotas.doc(doc.id).get(); // Recupero para devolverlo
     const nota = {
       id: doc.id,
       titulo: doc.data().titulo,
@@ -51,7 +52,7 @@ export default {
   // Actualiza con put
   // https://firebase.google.com/docs/firestore/manage-data/add-data?hl=es-419#update-data
   put(id, data) {
-    return Service.db.collection(resource).doc(id).set(data);
+    return DBNotas.doc(id).set(data);
   },
   // Actualizo con patch
   patch(id, data, token) {
@@ -63,7 +64,7 @@ export default {
   // Elimina
   // https://firebase.google.com/docs/firestore/manage-data/delete-data?hl=es-419
   delete(id) {
-    return Service.db.collection(resource).doc(id).delete();
+    return DBNotas.doc(id).delete();
   },
 };
 
