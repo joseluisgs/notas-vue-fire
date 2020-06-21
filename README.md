@@ -2,6 +2,7 @@
 
 Una aplicación de notas usando Vue.js. Como siempre para uso docente y educativo usando Firebase
 
+![NotasVueFire CI/CD](https://github.com/joseluisgs/notas-vue-fire/workflows/NotasVueFire%20CI/CD/badge.svg)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue)](https://hub.docker.com/r/joseluisgs/notas-vue-fire)
 [![Heroku](https://img.shields.io/badge/Heroku-Ready-blueviolet)](https://notas-vue-fire.herokuapp.com/)
 [![Vue Ready](https://img.shields.io/badge/Vue.js-%20Ready-%2342b983)](https://es.vuejs.org/)
