@@ -4,7 +4,7 @@ import firebase from 'firebase/app'; // mejor que poner import firebase from 'fi
 import 'firebase/firestore';
 import 'firebase/auth';
 import 'firebase/storage';
-import FirebaseConfig from './FirebaseConfig';
+import FirebaseConfig from './FirebaseConfig'; // Mejor para desplegar build
 
 // Configuramos Firebase desde env
 // const firebaseConfig = {
@@ -16,7 +16,10 @@ import FirebaseConfig from './FirebaseConfig';
 //   messagingSenderId: process.env.VUE_APP_FIRE_MESSAGING_SENDER_ID,
 //   appId: process.env.VUE_APP_FIRE_APP_ID,
 // };
+
 // Configuramos firebase desde nuestro fichero de FirebaseConfig.js
+// Para desplegarlo en Heroku, esta vez es mejor hacerlo así porque al ser un cliente compilado
+// Ya lee las variables
 const firebaseConfig = FirebaseConfig;
 
 // Inicializar Firebase
@@ -30,16 +33,8 @@ const { currentUser } = auth;
 // Autenticación de Google, poner uno por método de identificación. Se deb eactivar en la consola de Firebase
 const providerGoogle = new firebase.auth.GoogleAuthProvider();
 
-
 // imprimimos el nombre del proyecto, esto espor depurar, luego quitar
 console.log(defaultProject.name); // "[DEFAULT]"console.log(defaultProject.name);  // "[DEFAULT]"
-
-// Aquí si quremos podriamos exportar las colecciones
-// firebase collections
-// const usersCollection = db.collection('users');
-// const postsCollection = db.collection('posts');
-// const commentsCollection = db.collection('comments');
-// const likesCollection = db.collection('likes');
 
 // Exportamos lo que necesitemos
 export default {
