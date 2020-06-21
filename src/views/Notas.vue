@@ -238,12 +238,12 @@ export default {
         await NotasService.delete(id);
         // Elimino del array
         const index = this.notas.findIndex((item) => item.id === id);
-        // const delNota = this.notas[index];
+        const delNota = this.notas[index];
         this.notas.splice(index, 1);
         // Borramos la imagen
-        // if (delNota.fichero.id) {
-        //   await FilesService.delete(delNota.fichero.id, this.token);
-        // }
+        if (delNota.fichero.id) {
+          await FilesService.delete(delNota.fichero.id);
+        }
         // Alerta de mensaje
         this.verAlerta('¡Nota eliminada!', 'danger');
       } catch (error) {

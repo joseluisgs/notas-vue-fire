@@ -14,14 +14,14 @@ export default {
     // subimos el fichero
     await Storage.child(fileName).put(file);
     // Tomamos los metadatos y la url
+    // Serían los metadato del fichero segun Google Firebase
+    // Ponemos los metadatos que queremos para no volcar los de google
     const metadata = await Storage.child(fileName).getMetadata();
     const url = await Storage.child(fileName).getDownloadURL();
     const fichero = {
       id: metadata.name,
       name: metadata.name,
       url,
-      // Serían los metadato del fichero segun Google Firebase
-      // Ponemos los metadatos que queremos para no volcar los de google
       contentType: metadata.contentType,
       size: metadata.size,
       md5Hash: metadata.md5Hash,
@@ -31,10 +31,7 @@ export default {
     return fichero;
   },
   // Elimina un fichero asociado
-  // delete(id, token) {
-  //   const config = {
-  //     headers: { Authorization: `Bearer ${token}` },
-  //   };
-  //   return Service.delete(`${resource}/${id}`, config);
-  // },
+  delete(id) {
+    return Storage.child(id).delete();
+  },
 };
