@@ -210,6 +210,26 @@ export default {
   created() {
     // cargamos las notas
     this.cargarNotas();
+    // se puede uno ssucribir en tiempo real a los cambos, no lo he hecho pero el ejemlop es igual alogin que hicimos en main.js
+    // Lo actualiza de manera reactiva
+    // no lo he hecho así para no meter el cósigo de firebase totalemnet y seguir usando mi codigo de sevricio y no tocar las llamadas
+    // de este cliente, pero es una opción interesante que ya probé en otros tutoriales que he hecho
+    // https://firebase.google.com/docs/firestore/query-data/listen?hl=es-419
+    // ordenar y filltrar https://firebase.google.com/docs/firestore/query-data/order-limit-data?hl=es
+    // db.collection("notas")
+    // .onSnapshot((docs) => {
+    //     let documentos = [];
+    //     docs.forEach((doc) => {
+    //         documentos.push({
+    //             id: doc.id,
+    //             titulo: doc.data().titulo,
+    //             descripcion: doc.data().descripcion,
+    //             fecha: doc.data().fecha,
+    //             fichero: doc.data().fichero,
+    //         });
+    //     });
+    //     this.notas = documentos;
+    // });
   },
   // campos computados
   computed: {
@@ -259,6 +279,9 @@ export default {
         if (this.fichero.name) {
           const img = await FilesService.post(this.fichero);
           this.nota.fichero = img;
+          // Podriamos jugar a ver ele stado de la subida en tiempo real si en vez de llamar al servicio lo hiiesemos así
+          // https://www.genuitec.com/upload-files-using-vue-and-firebase/
+          // De la misma manera que anteriormente no lo he hecho por usar el mismo código que ya tenía
         }
         // Subimos la nota
         this.nota.user = this.user.email;
