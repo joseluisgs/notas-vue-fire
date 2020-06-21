@@ -15,6 +15,7 @@ const firebaseConfig = {
   messagingSenderId: process.env.VUE_APP_FIRE_MESSAGING_SENDER_ID,
   appId: process.env.VUE_APP_FIRE_APP_ID,
 };
+console.log(process.env.VUE_APP_FIRE_API_KEY);
 // Inicializar Firebase
 const defaultProject = firebase.initializeApp(firebaseConfig);
 
