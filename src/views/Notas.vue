@@ -241,7 +241,7 @@ export default {
         const delNota = this.notas[index];
         this.notas.splice(index, 1);
         // Borramos la imagen
-        if (delNota.fichero.id) {
+        if (delNota.fichero) {
           await FilesService.delete(delNota.fichero.id);
         }
         // Alerta de mensaje
@@ -253,6 +253,7 @@ export default {
     // agrega una nueva nota
     async agregarNota() {
       // Si hay fichero lo subimos
+      this.nota.fichero = null;
       try {
         // Subimos la imagen si hay
         if (this.fichero.name) {
@@ -279,13 +280,13 @@ export default {
       try {
         // Primero si hay fichero nuevo lo subimos
         if (this.fichero.name) {
-          const img = await FilesService.post(this.fichero, this.token);
+          const img = await FilesService.post(this.fichero);
           // si tenemos una imagen antigua la borramos
-          if (this.nota.fichero.name) {
-            await FilesService.delete(this.nota.fichero.id, this.token);
+          if (this.nota.fichero) {
+            await FilesService.delete(this.nota.fichero.id);
           }
           // copiamos los datos del nuevo fichero en la nota
-          this.nota.fichero = img.data;
+          this.nota.fichero = img;
         }
         // Actualizamos la nota
         this.nota.user = this.user.email;
